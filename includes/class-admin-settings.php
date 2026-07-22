@@ -100,7 +100,18 @@ class Admin_Settings {
 			'jp-multimedia-settings',
 			array( $this, 'render_multimedia_settings_page' )
 		);
-		// Submenu 5: Footer Settings
+
+		// Submenu 5: Impact Stats
+		add_submenu_page(
+			'journalist-portfolio-settings',
+			__( 'Impact Stats', 'journalist-portfolio-hub' ),
+			__( 'Impact Stats', 'journalist-portfolio-hub' ),
+			'manage_options',
+			'jp-impact-stats-settings',
+			array( $this, 'render_impact_stats_page' )
+		);
+
+		// Submenu 6: Footer Settings
 		add_submenu_page(
 			'journalist-portfolio-settings',
 			__( 'Footer Settings', 'journalist-portfolio-hub' ),
@@ -110,7 +121,7 @@ class Admin_Settings {
 			array( $this, 'render_footer_settings_page' )
 		);
 
-		// Submenu 6: Re-seed Demo Data
+		// Submenu 7: Re-seed Demo Data
 		add_submenu_page(
 			'journalist-portfolio-settings',
 			__( 'Re-seed Demo Data', 'journalist-portfolio-hub' ),
@@ -264,7 +275,8 @@ class Admin_Settings {
 			false !== strpos( $hook, 'jp-social-links' ) ||
 			false !== strpos( $hook, 'jp-footer-settings' ) ||
 			false !== strpos( $hook, 'jp-awards-settings' ) ||
-			false !== strpos( $hook, 'jp-multimedia-settings' )
+			false !== strpos( $hook, 'jp-multimedia-settings' ) ||
+			false !== strpos( $hook, 'jp-impact-stats-settings' )
 		);
 
 		$screen        = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
@@ -1099,5 +1111,175 @@ class Admin_Settings {
 		</div>
 		<?php
 	}
+
+	/**
+	 * Get Default Pre-populated Impact Stats.
+	 *
+	 * @return array Default 5 stat boxes.
+	 */
+	public static function get_default_impact_stats(): array {
+		return array(
+			array(
+				'stat_number' => '7+',
+				'stat_label'  => __( 'Years of Reporting Experience', 'journalist-portfolio-hub' ),
+				'stat_icon'   => 'dashicons-calendar-alt',
+				'stat_order'  => 1,
+			),
+			array(
+				'stat_number' => '500+',
+				'stat_label'  => __( 'Published Stories & Reports', 'journalist-portfolio-hub' ),
+				'stat_icon'   => 'dashicons-document',
+				'stat_order'  => 2,
+			),
+			array(
+				'stat_number' => 'International',
+				'stat_label'  => __( 'Publications in global media platforms', 'journalist-portfolio-hub' ),
+				'stat_icon'   => 'dashicons-globe',
+				'stat_order'  => 3,
+			),
+			array(
+				'stat_number' => 'Multiple',
+				'stat_label'  => __( 'Fellowships & Awards', 'journalist-portfolio-hub' ),
+				'stat_icon'   => 'dashicons-awards',
+				'stat_order'  => 4,
+			),
+			array(
+				'stat_number' => 'Impacting',
+				'stat_label'  => __( 'Policy, Awareness & Public Accountability', 'journalist-portfolio-hub' ),
+				'stat_icon'   => 'dashicons-megaphone',
+				'stat_order'  => 5,
+			),
+		);
+	}
+
+	/**
+	 * Render Submenu 7: Impact Stats Page.
+	 */
+	public function render_impact_stats_page(): void {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		wp_enqueue_media();
+
+		// Handle Form Submission / Reset
+		if ( isset( $_POST['jp_impact_stats_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['jp_impact_stats_nonce'] ) ), 'jp_save_impact_stats' ) ) {
+			if ( isset( $_POST['action'] ) && 'reset_defaults' === $_POST['action'] ) {
+				$defaults = self::get_default_impact_stats();
+				update_option( 'jp_impact_stats_data', wp_json_encode( $defaults ) );
+				echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Impact Stats reset to default values.', 'journalist-portfolio-hub' ) . '</p></div>';
+			} elseif ( isset( $_POST['stats'] ) && is_array( $_POST['stats'] ) ) {
+				$raw_stats   = wp_unslash( $_POST['stats'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+				$clean_stats = array();
+
+				foreach ( $raw_stats as $index => $item ) {
+					$num   = sanitize_text_field( $item['number'] ?? '' );
+					$lbl   = sanitize_text_field( $item['label'] ?? '' );
+					$icon  = sanitize_text_field( $item['icon'] ?? '' );
+					$order = isset( $item['order'] ) ? absint( $item['order'] ) : ( $index + 1 );
+
+					if ( ! empty( $num ) || ! empty( $lbl ) ) {
+						$clean_stats[] = array(
+							'stat_number' => $num,
+							'stat_label'  => $lbl,
+							'stat_icon'   => $icon,
+							'stat_order'  => $order,
+						);
+					}
+				}
+
+				// Sort by stat_order
+				usort( $clean_stats, function( $a, $b ) {
+					return ( $a['stat_order'] ?? 1 ) <=> ( $b['stat_order'] ?? 1 );
+				});
+
+				update_option( 'jp_impact_stats_data', wp_json_encode( $clean_stats ) );
+				echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Impact Stats updated successfully.', 'journalist-portfolio-hub' ) . '</p></div>';
+			}
+		}
+
+		// Fetch stats data or fall back to defaults
+		$stats_json = get_option( 'jp_impact_stats_data', '' );
+		if ( empty( $stats_json ) ) {
+			$stats = self::get_default_impact_stats();
+		} else {
+			$stats = json_decode( $stats_json, true );
+			if ( ! is_array( $stats ) || empty( $stats ) ) {
+				$stats = self::get_default_impact_stats();
+			}
+		}
+
+		// Ensure 5 boxes for editing
+		while ( count( $stats ) < 5 ) {
+			$stats[] = array(
+				'stat_number' => '',
+				'stat_label'  => '',
+				'stat_icon'   => 'dashicons-chart-bar',
+				'stat_order'  => count( $stats ) + 1,
+			);
+		}
+		?>
+		<div class="wrap jp-admin-wrap">
+			<div class="jp-admin-header" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;">
+				<div>
+					<h1><?php esc_html_e( 'Impact Stats Counter Settings', 'journalist-portfolio-hub' ); ?></h1>
+					<p><?php esc_html_e( 'Manage the 5 key reporting metric boxes displayed in the elevated impact counter bar on the homepage.', 'journalist-portfolio-hub' ); ?></p>
+				</div>
+				<form method="post" onsubmit="return confirm('<?php esc_js( esc_html_e( 'Reset all 5 stat boxes to default values?', 'journalist-portfolio-hub' ) ); ?>');">
+					<?php wp_nonce_field( 'jp_save_impact_stats', 'jp_impact_stats_nonce' ); ?>
+					<input type="hidden" name="action" value="reset_defaults">
+					<button type="submit" class="button button-secondary"><?php esc_html_e( 'Reset Defaults', 'journalist-portfolio-hub' ); ?></button>
+				</form>
+			</div>
+
+			<form method="post">
+				<?php wp_nonce_field( 'jp_save_impact_stats', 'jp_impact_stats_nonce' ); ?>
+
+				<div style="display: flex; flex-direction: column; gap: 20px;">
+					<?php foreach ( array_slice( $stats, 0, 5 ) as $i => $stat ) : ?>
+						<div class="jp-admin-card" style="background: #fff; padding: 20px 24px; border-radius: 10px; border: 1px solid #ccd0d4;">
+							<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
+								<h3 style="margin: 0; color: #0f172a; font-size: 1.05rem;">
+									<span style="background: #059669; color: #fff; width: 24px; height: 24px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; margin-right: 8px; font-weight: 700;"><?php echo esc_html( $i + 1 ); ?></span>
+									<?php printf( esc_html__( 'Stat Box %d', 'journalist-portfolio-hub' ), $i + 1 ); ?>
+								</h3>
+								<span style="font-size: 0.85em; color: #64748b; font-weight: 600;"><?php esc_html_e( 'Order Position:', 'journalist-portfolio-hub' ); ?> 
+									<input type="number" name="stats[<?php echo esc_attr( $i ); ?>][order]" value="<?php echo esc_attr( $stat['stat_order'] ?? ( $i + 1 ) ); ?>" style="width: 60px; text-align: center;" min="1" max="5">
+								</span>
+							</div>
+
+							<div style="display: grid; grid-template-columns: 180px 1fr 1fr; gap: 20px;">
+								<div>
+									<label for="stat_num_<?php echo esc_attr( $i ); ?>"><strong><?php esc_html_e( 'Metric Number / Value:', 'journalist-portfolio-hub' ); ?></strong></label>
+									<input type="text" id="stat_num_<?php echo esc_attr( $i ); ?>" name="stats[<?php echo esc_attr( $i ); ?>][number]" value="<?php echo esc_attr( $stat['stat_number'] ?? '' ); ?>" class="widefat" placeholder="e.g. 7+, 500+, International">
+								</div>
+
+								<div>
+									<label for="stat_lbl_<?php echo esc_attr( $i ); ?>"><strong><?php esc_html_e( 'Description Label:', 'journalist-portfolio-hub' ); ?></strong></label>
+									<input type="text" id="stat_lbl_<?php echo esc_attr( $i ); ?>" name="stats[<?php echo esc_attr( $i ); ?>][label]" value="<?php echo esc_attr( $stat['stat_label'] ?? '' ); ?>" class="widefat" placeholder="e.g. Years of Reporting Experience">
+								</div>
+
+								<div>
+									<label for="stat_icon_<?php echo esc_attr( $i ); ?>"><strong><?php esc_html_e( 'Icon (Dashicon / Image URL):', 'journalist-portfolio-hub' ); ?></strong></label>
+									<div style="display: flex; gap: 6px; margin-top: 4px;">
+										<input type="text" id="stat_icon_<?php echo esc_attr( $i ); ?>" name="stats[<?php echo esc_attr( $i ); ?>][icon]" value="<?php echo esc_attr( $stat['stat_icon'] ?? '' ); ?>" class="widefat jp-media-url" placeholder="dashicons-calendar-alt or https://...">
+										<button type="button" class="button jp-upload-btn"><?php esc_html_e( 'Upload', 'journalist-portfolio-hub' ); ?></button>
+									</div>
+								</div>
+							</div>
+						</div>
+					<?php endforeach; ?>
+				</div>
+
+				<p style="margin-top: 24px;">
+					<button type="submit" class="button button-primary" style="background: #059669; border-color: #059669; color: #fff; font-weight: 700; padding: 6px 24px; font-size: 1rem; height: auto;">
+						<?php esc_html_e( 'Save Impact Stats Settings', 'journalist-portfolio-hub' ); ?>
+					</button>
+				</p>
+			</form>
+		</div>
+		<?php
+	}
 }
+
 

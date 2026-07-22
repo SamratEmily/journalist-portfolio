@@ -161,3 +161,12 @@ if ( ! function_exists( 'jp_render_about_brief' ) ) {
 	}
 }
 
+if ( ! function_exists( 'jp_render_impact_stats' ) ) {
+	/**
+	 * Echo the Impact Stats Counter Bar HTML output directly in PHP templates.
+	 */
+	function jp_render_impact_stats(): void {
+		echo do_shortcode( '[jp_impact_stats]' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	}
+}
+

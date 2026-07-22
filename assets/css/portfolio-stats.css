@@ -1,0 +1,159 @@
+/* ==========================================================================
+   IMPACT STATS COUNTER BAR MODULE
+   ========================================================================== */
+
+.jp-impact-stats-section {
+    padding-top: 15px;
+    padding-bottom: 45px;
+}
+
+.jp-impact-stats-card {
+    background-color: #F9F9FB;
+    border: 1px solid #E5E7EB;
+    border-radius: 14px;
+    padding: 24px 28px;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+}
+
+.jp-impact-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    align-items: center;
+    gap: 0;
+}
+
+.jp-impact-stat-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 0 16px;
+    border-right: 1px solid #E5E7EB;
+}
+
+.jp-impact-stat-item:first-child {
+    padding-left: 0;
+}
+
+.jp-impact-stat-item:last-child {
+    border-right: none;
+    padding-right: 0;
+}
+
+.jp-impact-stat-icon-wrap {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background-color: #ECFDF5;
+    border: 1px solid rgba(5, 150, 105, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #059669;
+    flex-shrink: 0;
+}
+
+.jp-impact-stat-icon-wrap .dashicons {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+}
+
+.jp-impact-stat-custom-img {
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+}
+
+.jp-impact-stat-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.jp-impact-stat-number {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #1E3A2B;
+    line-height: 1.2;
+    margin-bottom: 2px;
+    font-family: var(--jp-font-serif, 'Merriweather', Georgia, serif);
+    letter-spacing: -0.01em;
+}
+
+.jp-impact-stat-label {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: #4B5563;
+    line-height: 1.35;
+}
+
+/* ==========================================================================
+   RESPONSIVE BREAKPOINTS
+   ========================================================================== */
+
+/* Tablet Breakpoint (768px – 1023px) */
+@media (max-width: 1023px) and (min-width: 768px) {
+    .jp-impact-stats-card {
+        padding: 24px 20px;
+    }
+
+    .jp-impact-stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+        row-gap: 24px;
+    }
+
+    .jp-impact-stat-item {
+        border-right: 1px solid #E5E7EB;
+        padding: 0 14px;
+    }
+
+    .jp-impact-stat-item:nth-child(3n) {
+        border-right: none;
+        padding-right: 0;
+    }
+
+    .jp-impact-stat-item:nth-child(3n+1) {
+        padding-left: 0;
+    }
+
+    .jp-impact-stat-item:nth-child(4) {
+        border-right: 1px solid #E5E7EB;
+    }
+
+    .jp-impact-stat-item:nth-child(5) {
+        border-right: none;
+    }
+}
+
+/* Mobile Breakpoint (<767px) */
+@media (max-width: 767px) {
+    .jp-impact-stats-card {
+        padding: 20px 16px;
+    }
+
+    .jp-impact-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px 12px;
+    }
+
+    .jp-impact-stat-item {
+        border-right: none;
+        padding: 0;
+        flex-direction: column;
+        text-align: center;
+        align-items: center;
+    }
+
+    .jp-impact-stat-item:first-child,
+    .jp-impact-stat-item:last-child {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .jp-impact-stat-number {
+        font-size: 1.2rem;
+    }
+
+    .jp-impact-stat-label {
+        font-size: 0.78rem;
+    }
+}

@@ -38,6 +38,7 @@ class Shortcodes {
 		add_shortcode( 'jp_awards_carousel', array( $this, 'render_awards_carousel' ) );
 		add_shortcode( 'jp_multimedia_section', array( $this, 'render_multimedia_section' ) );
 		add_shortcode( 'jp_about_brief_section', array( $this, 'render_about_brief_section' ) );
+		add_shortcode( 'jp_impact_stats', array( $this, 'render_impact_stats' ) );
 	}
 
 	/**
@@ -355,6 +356,71 @@ class Shortcodes {
 						<a href="<?php echo esc_url( $about_url ); ?>" class="jp-about-brief-btn">
 							<span><?php esc_html_e( 'Read Full Biography', 'journalist-portfolio-hub' ); ?> &rarr;</span>
 						</a>
+					</div>
+				</div>
+			</div>
+		</section>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
+	 * Render Impact Stats Counter Bar [jp_impact_stats]
+	 *
+	 * @param array|string $atts Shortcode attributes.
+	 * @return string HTML output.
+	 */
+	public function render_impact_stats( $atts = array() ): string {
+		$stats_json = get_option( 'jp_impact_stats_data', '' );
+		if ( empty( $stats_json ) ) {
+			$stats = Admin_Settings::get_default_impact_stats();
+		} else {
+			$stats = json_decode( $stats_json, true );
+			if ( ! is_array( $stats ) || empty( $stats ) ) {
+				$stats = Admin_Settings::get_default_impact_stats();
+			}
+		}
+
+		// Sort by stat_order
+		usort( $stats, function( $a, $b ) {
+			return ( $a['stat_order'] ?? 1 ) <=> ( $b['stat_order'] ?? 1 );
+		});
+
+		$stats = array_slice( $stats, 0, 5 );
+
+		ob_start();
+		?>
+		<section class="jp-section jp-impact-stats-section" style="padding-top: 15px; padding-bottom: 45px;">
+			<div class="jp-container">
+				<div class="jp-impact-stats-card">
+					<div class="jp-impact-stats-grid">
+						<?php foreach ( $stats as $index => $stat ) : ?>
+							<?php
+							$number = $stat['stat_number'] ?? '';
+							$label  = $stat['stat_label'] ?? '';
+							$icon   = $stat['stat_icon'] ?? 'dashicons-chart-bar';
+
+							if ( empty( $number ) && empty( $label ) ) {
+								continue;
+							}
+							?>
+							<div class="jp-impact-stat-item">
+								<div class="jp-impact-stat-icon-wrap">
+									<?php if ( str_starts_with( $icon, 'http' ) ) : ?>
+										<img src="<?php echo esc_url( $icon ); ?>" alt="<?php echo esc_attr( $number ); ?>" class="jp-impact-stat-custom-img">
+									<?php elseif ( str_starts_with( $icon, 'dashicons-' ) ) : ?>
+										<span class="dashicons <?php echo esc_attr( $icon ); ?>"></span>
+									<?php else : ?>
+										<span class="dashicons dashicons-chart-bar"></span>
+									<?php endif; ?>
+								</div>
+
+								<div class="jp-impact-stat-content">
+									<div class="jp-impact-stat-number"><?php echo esc_html( $number ); ?></div>
+									<div class="jp-impact-stat-label"><?php echo esc_html( $label ); ?></div>
+								</div>
+							</div>
+						<?php endforeach; ?>
 					</div>
 				</div>
 			</div>

@@ -168,8 +168,11 @@ $featured_story_id = 0;
 	</div>
 </section>
 
+<!-- IMPACT STATS COUNTER BAR SECTION -->
+<?php jp_render_impact_stats(); ?>
+
 <!-- 2. STORIES SECTION (Grid of remaining stories) -->
-<section class="jp-section" style="padding-top: 20px;">
+<section class="jp-section" style="padding-top: 10px;">
 	<div class="jp-container">
 		<div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px;">
 			<div>

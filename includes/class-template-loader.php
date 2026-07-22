@@ -118,6 +118,7 @@ class Template_Loader {
 		wp_enqueue_style( 'jp-portfolio-awards-style', JP_HUB_PLUGIN_URL . 'assets/css/portfolio-awards.css', array(), JP_HUB_VERSION );
 		wp_enqueue_style( 'jp-portfolio-contact-style', JP_HUB_PLUGIN_URL . 'assets/css/portfolio-contact.css', array( 'jp-portfolio-style' ), JP_HUB_VERSION );
 		wp_enqueue_style( 'jp-portfolio-extra-style', JP_HUB_PLUGIN_URL . 'assets/css/portfolio-homepage-extra.css', array( 'jp-portfolio-style' ), JP_HUB_VERSION );
+		wp_enqueue_style( 'jp-portfolio-stats-style', JP_HUB_PLUGIN_URL . 'assets/css/portfolio-stats.css', array( 'jp-portfolio-style' ), JP_HUB_VERSION );
 
 		wp_enqueue_script( 'jp-multimedia-modal', JP_HUB_PLUGIN_URL . 'assets/js/multimedia-modal.js', array(), JP_HUB_VERSION, true );
 	}
