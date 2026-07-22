@@ -11,7 +11,11 @@ require JP_HUB_PLUGIN_DIR . 'templates/header-nav.php';
 
 $full_name      = get_option( 'jp_full_name', 'Investigative Journalist' );
 $designation    = get_option( 'jp_designation', 'Senior Reporter & Documentarian' );
-$profile_image  = get_option( 'jp_profile_image', '' );
+$profile_image    = get_option( 'jp_profile_image', '' );
+$hero_cover_image = get_option( 'jp_hero_cover_image', '' );
+if ( empty( $hero_cover_image ) ) {
+	$hero_cover_image = $profile_image;
+}
 $show_on_home   = get_option( 'jp_show_on_home', '1' );
 $home_objective = get_option( 'jp_home_objective', 'Dedicated to uncovering in-depth human stories, global climate challenges, and investigative truth through rigorous reporting.' );
 
@@ -19,39 +23,28 @@ $featured_story_id = 0;
 ?>
 
 <?php if ( '1' === (string) $show_on_home ) : ?>
-<!-- Hero Section -->
-<section class="jp-hero-section">
-	<div class="jp-container">
-		<div class="jp-hero-grid">
-			<div class="jp-hero-content">
-				<h1 class="jp-hero-title"><?php echo esc_html( $full_name ); ?></h1>
-				<div class="jp-hero-designation"><?php echo esc_html( $designation ); ?></div>
+<!-- Hero Section (Full Width Background Image with Transparent Content Overlay) -->
+<section class="jp-hero-section" style="<?php echo ! empty( $hero_cover_image ) ? 'background-image: url(' . esc_url( $hero_cover_image ) . ');' : ''; ?>">
+	<div class="jp-hero-overlay"></div>
+	<div class="jp-container jp-hero-container">
+		<div class="jp-hero-content">
+			<h1 class="jp-hero-title"><?php echo esc_html( $full_name ); ?></h1>
+			<div class="jp-hero-designation"><?php echo esc_html( $designation ); ?></div>
 
-				<?php if ( ! empty( $home_objective ) ) : ?>
-					<div class="jp-hero-objective">
-						"<?php echo esc_html( $home_objective ); ?>"
-					</div>
-				<?php endif; ?>
-
-				<div style="display: flex; gap: 16px; margin-top: 24px;">
-					<a href="<?php echo esc_url( home_url( '/stories' ) ); ?>" class="jp-cta-btn" style="padding: 12px 24px; font-size: 1rem;">
-						<span><?php esc_html_e( 'Explore Stories', 'journalist-portfolio-hub' ); ?></span>
-						<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-					</a>
-					<a href="<?php echo esc_url( home_url( '/about' ) ); ?>" class="jp-cta-btn" style="background: transparent; border: 1px solid rgba(255,255,255,0.3); box-shadow: none; padding: 12px 24px; font-size: 1rem;">
-						<span><?php esc_html_e( 'Read Full Bio', 'journalist-portfolio-hub' ); ?></span>
-					</a>
+			<?php if ( ! empty( $home_objective ) ) : ?>
+				<div class="jp-hero-objective">
+					"<?php echo esc_html( $home_objective ); ?>"
 				</div>
-			</div>
+			<?php endif; ?>
 
-			<div class="jp-hero-avatar-wrapper">
-				<?php if ( ! empty( $profile_image ) ) : ?>
-					<img src="<?php echo esc_url( $profile_image ); ?>" alt="<?php echo esc_attr( $full_name ); ?>" class="jp-hero-avatar">
-				<?php else : ?>
-					<div class="jp-hero-avatar" style="background: #334155; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 48px;">
-						<span class="dashicons dashicons-admin-users" style="font-size: 64px; width: 64px; height: 64px;"></span>
-					</div>
-				<?php endif; ?>
+			<div class="jp-hero-actions" style="display: flex; gap: 16px; margin-top: 28px; flex-wrap: wrap;">
+				<a href="<?php echo esc_url( home_url( '/stories' ) ); ?>" class="jp-cta-btn" style="padding: 12px 28px; font-size: 1rem;">
+					<span><?php esc_html_e( 'Explore Stories', 'journalist-portfolio-hub' ); ?></span>
+					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+				</a>
+				<a href="<?php echo esc_url( home_url( '/about' ) ); ?>" class="jp-cta-btn jp-cta-btn-outline" style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.35); backdrop-filter: blur(6px); box-shadow: none; padding: 12px 28px; font-size: 1rem;">
+					<span><?php esc_html_e( 'Read Full Bio', 'journalist-portfolio-hub' ); ?></span>
+				</a>
 			</div>
 		</div>
 	</div>

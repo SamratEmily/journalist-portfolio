@@ -134,6 +134,7 @@ class Admin_Settings {
 			'jp_contact_location' => 'sanitize_text_field',
 			'jp_bio_text'         => 'wp_kses_post',
 			'jp_profile_image'    => 'esc_url_raw',
+			'jp_hero_cover_image' => 'esc_url_raw',
 			'jp_show_on_home'     => array( $this, 'sanitize_checkbox' ),
 			'jp_home_objective'   => 'wp_kses_post',
 		);
@@ -375,8 +376,23 @@ class Admin_Settings {
 						</label>
 					</div>
 
-					<div class="jp-field-group">
-						<label for="jp_home_objective"><?php esc_html_e( 'Hero Objective / Mission Statement:', 'journalist-portfolio-hub' ); ?></label>
+					<?php $hero_cover_image = get_option( 'jp_hero_cover_image', '' ); ?>
+					<div class="jp-field-group" style="margin-top: 16px;">
+						<label for="jp_hero_cover_image"><strong><?php esc_html_e( 'Hero Cover / Background Image:', 'journalist-portfolio-hub' ); ?></strong></label>
+						<div style="display: flex; gap: 10px; align-items: center; margin-top: 6px;">
+							<input type="text" id="jp_hero_cover_image" name="jp_hero_cover_image" value="<?php echo esc_url( $hero_cover_image ); ?>" class="widefat jp-media-url" placeholder="https://...">
+							<button type="button" class="button jp-upload-btn"><?php esc_html_e( 'Select Hero Cover Image', 'journalist-portfolio-hub' ); ?></button>
+						</div>
+						<span class="description" style="font-size: 0.85em; color: #64748b; margin-top: 4px; display: block;">
+							<?php esc_html_e( 'Recommended size: 1920x800px or high-resolution wide image. Will fit full-width as Hero background without repeating.', 'journalist-portfolio-hub' ); ?>
+						</span>
+						<div class="jp-hero-cover-preview-box" style="margin-top: 10px;">
+							<img class="jp-thumb-preview" src="<?php echo esc_url( $hero_cover_image ); ?>" style="<?php echo empty( $hero_cover_image ) ? 'display:none;' : ''; ?> max-width: 360px; max-height: 160px; border-radius: 8px; border: 1px solid #cbd5e1; object-fit: cover;" alt="Hero Cover Preview">
+						</div>
+					</div>
+
+					<div class="jp-field-group" style="margin-top: 16px;">
+						<label for="jp_home_objective"><strong><?php esc_html_e( 'Hero Objective / Mission Statement:', 'journalist-portfolio-hub' ); ?></strong></label>
 						<textarea id="jp_home_objective" name="jp_home_objective" rows="4" placeholder="<?php esc_attr_e( 'Uncovering human stories, climate crisis impacts, and investigative truth across global borders.', 'journalist-portfolio-hub' ); ?>"><?php echo esc_textarea( $home_objective ); ?></textarea>
 					</div>
 				</div>
