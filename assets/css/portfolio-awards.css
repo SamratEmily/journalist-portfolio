@@ -1,0 +1,235 @@
+/**
+ * Journalist Portfolio Hub - Awards & Fellowships Styles
+ * Palette: #0f172a (Charcoal), #059669 (Emerald Green), #f8fafc (Light Gray)
+ */
+
+/* Main Awards Section Header */
+.jp-awards-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 28px;
+}
+
+.jp-awards-title-wrap h2 {
+    font-family: var(--jp-font-sans, 'Inter', sans-serif);
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.02em;
+    margin: 0 0 6px 0;
+}
+
+.jp-awards-title-wrap p {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+/* Slider Controls */
+.jp-awards-nav-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.jp-slider-nav-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    color: #0f172a;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.jp-slider-nav-btn:hover {
+    background: #059669;
+    color: #ffffff;
+    border-color: #059669;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+    transform: translateY(-1px);
+}
+
+.jp-slider-nav-btn:active {
+    transform: translateY(0);
+}
+
+/* One-Line Carousel Slider Container (Homepage) */
+.jp-awards-slider-container {
+    position: relative;
+    overflow: hidden;
+    padding: 4px 2px;
+}
+
+.jp-awards-slider-track {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+    padding-bottom: 8px;
+}
+
+.jp-awards-slider-track::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+}
+
+.jp-awards-slider-card {
+    flex: 0 0 320px;
+    scroll-snap-align: start;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.jp-awards-slider-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+    border-color: #059669;
+}
+
+/* Dedicated Awards Page Grid Layout (/awards) */
+.jp-awards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 40px;
+}
+
+.jp-award-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.jp-award-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.09);
+    border-color: #059669;
+}
+
+/* Card Header Elements */
+.jp-award-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 18px;
+}
+
+.jp-award-icon-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #0f172a;
+    color: #059669;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15);
+    flex-shrink: 0;
+}
+
+.jp-award-icon-circle img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.jp-award-year-badge {
+    background: #f1f5f9;
+    color: #0f172a;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid #cbd5e1;
+    letter-spacing: 0.02em;
+}
+
+/* Card Titles and Details */
+.jp-award-title {
+    font-family: var(--jp-font-sans, 'Inter', sans-serif);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.35;
+    margin: 0 0 8px 0;
+}
+
+.jp-award-subtitle {
+    font-size: 0.925rem;
+    font-weight: 600;
+    color: #059669;
+    margin-bottom: 12px;
+    display: block;
+}
+
+.jp-award-desc {
+    font-size: 0.925rem;
+    color: #475569;
+    line-height: 1.6;
+    margin: 0 0 20px 0;
+}
+
+/* Card Footer Meta */
+.jp-award-footer-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 14px;
+    border-top: 1px solid #f1f5f9;
+    font-size: 0.825rem;
+    color: #64748b;
+}
+
+.jp-award-location-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* Responsive Rules */
+@media (max-width: 1024px) {
+    .jp-awards-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .jp-awards-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .jp-awards-slider-card {
+        flex: 0 0 280px;
+    }
+
+    .jp-awards-header-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+}

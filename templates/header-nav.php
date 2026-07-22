@@ -62,7 +62,7 @@ $current_page_slug = get_post_field( 'post_name', get_post() );
 			<!-- Right Controls: Search Box & Contact CTA -->
 			<div class="jp-header-right">
 				<form role="search" method="get" class="jp-search-form" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-					<span class="dashicons dashicons-search jp-search-icon"></span>
+					<!-- <span class="dashicons dashicons-search jp-search-icon"></span> -->
 					<input type="search" class="jp-search-input" placeholder="<?php esc_attr_e( 'Search stories...', 'journalist-portfolio-hub' ); ?>" value="<?php echo get_search_query(); ?>" name="s" />
 					<input type="hidden" name="post_type" value="story" />
 				</form>

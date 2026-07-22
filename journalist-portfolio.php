@@ -24,11 +24,13 @@ define( 'JP_HUB_PLUGIN_FILE', __FILE__ );
 // Load Required Classes.
 require_once JP_HUB_PLUGIN_DIR . 'includes/class-activator.php';
 require_once JP_HUB_PLUGIN_DIR . 'includes/class-cpt-stories.php';
+require_once JP_HUB_PLUGIN_DIR . 'includes/class-cpt-awards.php';
 require_once JP_HUB_PLUGIN_DIR . 'includes/class-admin-settings.php';
 require_once JP_HUB_PLUGIN_DIR . 'includes/class-template-loader.php';
 require_once JP_HUB_PLUGIN_DIR . 'includes/class-shortcodes.php';
 require_once JP_HUB_PLUGIN_DIR . 'includes/class-footer-manager.php';
 require_once JP_HUB_PLUGIN_DIR . 'includes/class-demo-seeder.php';
+require_once JP_HUB_PLUGIN_DIR . 'includes/class-contact-handler.php';
 
 // Register Activation & Deactivation Hooks.
 register_activation_hook( __FILE__, array( 'JournalistPortfolio\Activator', 'activate' ) );
@@ -69,8 +71,9 @@ final class Journalist_Portfolio_Hub {
 	 * Initialize plugin components.
 	 */
 	private function init_components(): void {
-		// Initialize Custom Post Type & Taxonomy.
+		// Initialize Custom Post Types.
 		\JournalistPortfolio\CPT_Stories::get_instance();
+		\JournalistPortfolio\CPT_Awards::get_instance();
 
 		// Initialize Admin Settings.
 		if ( is_admin() ) {
@@ -85,6 +88,9 @@ final class Journalist_Portfolio_Hub {
 
 		// Initialize Footer Manager.
 		\JournalistPortfolio\Footer_Manager::get_instance();
+
+		// Initialize Contact Handler (shortcode + AJAX).
+		\JournalistPortfolio\Contact_Handler::get_instance();
 	}
 }
 

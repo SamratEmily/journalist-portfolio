@@ -282,4 +282,7 @@ $featured_story_id = 0;
 	</div>
 </section>
 
+<!-- 3. AWARDS & FELLOWSHIPS CAROUSEL SECTION -->
+<?php echo do_shortcode( '[jp_awards_carousel]' ); ?>
+
 <?php require JP_HUB_PLUGIN_DIR . 'templates/footer.php'; ?>

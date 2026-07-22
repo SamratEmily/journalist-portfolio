@@ -64,6 +64,14 @@ class Template_Loader {
 			}
 		}
 
+		// Awards Page Routing.
+		if ( is_page( 'awards' ) ) {
+			$awards_template = JP_HUB_PLUGIN_DIR . 'templates/page-awards.php';
+			if ( file_exists( $awards_template ) ) {
+				return $awards_template;
+			}
+		}
+
 		// Stories Archive / Page Routing.
 		if ( is_page( 'stories' ) || is_post_type_archive( 'story' ) || is_tax( 'story_category' ) ) {
 			$stories_template = JP_HUB_PLUGIN_DIR . 'templates/page-stories.php';
@@ -80,6 +88,14 @@ class Template_Loader {
 			}
 		}
 
+		// Contact Page Routing.
+		if ( is_page( 'contact' ) ) {
+			$contact_template = JP_HUB_PLUGIN_DIR . 'templates/page-contact.php';
+			if ( file_exists( $contact_template ) ) {
+				return $contact_template;
+			}
+		}
+
 		return $template;
 	}
 
@@ -91,5 +107,7 @@ class Template_Loader {
 		wp_enqueue_style( 'dashicons' );
 		wp_enqueue_style( 'jp-portfolio-style', JP_HUB_PLUGIN_URL . 'assets/css/portfolio-style.css', array(), JP_HUB_VERSION );
 		wp_enqueue_style( 'jp-portfolio-footer-style', JP_HUB_PLUGIN_URL . 'assets/css/portfolio-footer.css', array(), JP_HUB_VERSION );
+		wp_enqueue_style( 'jp-portfolio-awards-style', JP_HUB_PLUGIN_URL . 'assets/css/portfolio-awards.css', array(), JP_HUB_VERSION );
+		wp_enqueue_style( 'jp-portfolio-contact-style', JP_HUB_PLUGIN_URL . 'assets/css/portfolio-contact.css', array( 'jp-portfolio-style' ), JP_HUB_VERSION );
 	}
 }

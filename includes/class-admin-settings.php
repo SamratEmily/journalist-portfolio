@@ -89,6 +89,16 @@ class Admin_Settings {
 			'jp-footer-settings',
 			array( $this, 'render_footer_settings_page' )
 		);
+
+		// Submenu 4: Awards & Fellowships
+		add_submenu_page(
+			'journalist-portfolio-settings',
+			__( 'Awards & Fellowships', 'journalist-portfolio-hub' ),
+			__( 'Awards & Fellowships', 'journalist-portfolio-hub' ),
+			'manage_options',
+			'jp-awards-settings',
+			array( $this, 'render_awards_settings_page' )
+		);
 	}
 
 	/**
@@ -642,6 +652,186 @@ class Admin_Settings {
 
 				<?php submit_button( __( 'Save Footer Settings', 'journalist-portfolio-hub' ) ); ?>
 			</form>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Render Awards & Fellowships Settings Admin Page.
+	 */
+	public function render_awards_settings_page(): void {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		// Handle Form Submissions (Add / Delete / Edit).
+		if ( isset( $_POST['jp_award_admin_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['jp_award_admin_nonce'] ) ), 'jp_save_award_admin' ) ) {
+			// Delete action
+			if ( isset( $_POST['action'] ) && 'delete_award' === $_POST['action'] && isset( $_POST['award_id'] ) ) {
+				$award_id = absint( $_POST['award_id'] );
+				wp_delete_post( $award_id, true );
+				echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Award deleted successfully.', 'journalist-portfolio-hub' ) . '</p></div>';
+			}
+			// Save / Update action
+			elseif ( isset( $_POST['award_title'] ) && ! empty( trim( $_POST['award_title'] ) ) ) {
+				$title       = sanitize_text_field( wp_unslash( $_POST['award_title'] ) );
+				$award_for   = sanitize_text_field( wp_unslash( $_POST['award_for'] ?? '' ) );
+				$year        = sanitize_text_field( wp_unslash( $_POST['award_year'] ?? '' ) );
+				$location    = sanitize_text_field( wp_unslash( $_POST['award_location'] ?? '' ) );
+				$icon        = sanitize_text_field( wp_unslash( $_POST['award_icon'] ?? 'dashicons-awards' ) );
+				$description = sanitize_textarea_field( wp_unslash( $_POST['award_description'] ?? '' ) );
+
+				$post_id = isset( $_POST['award_id'] ) ? absint( $_POST['award_id'] ) : 0;
+
+				$post_data = array(
+					'post_title'  => $title,
+					'post_type'   => 'jp_award',
+					'post_status' => 'publish',
+				);
+
+				if ( $post_id > 0 ) {
+					$post_data['ID'] = $post_id;
+					wp_update_post( $post_data );
+				} else {
+					$post_id = wp_insert_post( $post_data );
+				}
+
+				if ( $post_id && ! is_wp_error( $post_id ) ) {
+					update_post_meta( $post_id, '_award_for', $award_for );
+					update_post_meta( $post_id, '_award_year', $year );
+					update_post_meta( $post_id, '_award_location', $location );
+					update_post_meta( $post_id, '_award_icon', $icon );
+					update_post_meta( $post_id, '_award_description', $description );
+
+					echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Award saved successfully.', 'journalist-portfolio-hub' ) . '</p></div>';
+				}
+			}
+		}
+
+		// Edit Mode Check
+		$editing_award = null;
+		if ( isset( $_GET['edit_award'] ) ) {
+			$edit_id = absint( $_GET['edit_award'] );
+			$editing_award = get_post( $edit_id );
+		}
+
+		// Fetch All Awards
+		$awards = get_posts(
+			array(
+				'post_type'      => 'jp_award',
+				'post_status'    => 'publish',
+				'posts_per_page' => -1,
+				'orderby'        => 'date',
+				'order'          => 'DESC',
+			)
+		);
+		?>
+		<div class="wrap jp-admin-wrap">
+			<div class="jp-admin-header" style="margin-bottom: 24px;">
+				<h1><?php esc_html_e( 'Awards & Fellowships Management', 'journalist-portfolio-hub' ); ?></h1>
+				<p><?php esc_html_e( 'Add and manage journalistic awards, grants, fellowships, and honors.', 'journalist-portfolio-hub' ); ?></p>
+			</div>
+
+			<div style="display: grid; grid-template-columns: 380px 1fr; gap: 30px;">
+				<!-- Add/Edit Form -->
+				<div class="jp-admin-card" style="background: #fff; padding: 24px; border-radius: 8px; border: 1px solid #ccd0d4;">
+					<h2><?php echo $editing_award ? esc_html__( 'Edit Award', 'journalist-portfolio-hub' ) : esc_html__( 'Add New Award', 'journalist-portfolio-hub' ); ?></h2>
+					<form method="post">
+						<?php wp_nonce_field( 'jp_save_award_admin', 'jp_award_admin_nonce' ); ?>
+						<?php if ( $editing_award ) : ?>
+							<input type="hidden" name="award_id" value="<?php echo esc_attr( $editing_award->ID ); ?>">
+						<?php endif; ?>
+
+						<p>
+							<label for="award_title"><strong><?php esc_html_e( 'Award / Fellowship Title:', 'journalist-portfolio-hub' ); ?></strong></label><br>
+							<input type="text" id="award_title" name="award_title" required class="widefat" value="<?php echo $editing_award ? esc_attr( $editing_award->post_title ) : ''; ?>" placeholder="e.g., GCCA+ Youth Awards">
+						</p>
+
+						<p>
+							<label for="award_for"><strong><?php esc_html_e( 'Awarded For / Organization:', 'journalist-portfolio-hub' ); ?></strong></label><br>
+							<input type="text" id="award_for" name="award_for" class="widefat" value="<?php echo $editing_award ? esc_attr( get_post_meta( $editing_award->ID, '_award_for', true ) ) : ''; ?>" placeholder="e.g., for Climate Storytelling">
+						</p>
+
+						<p>
+							<label for="award_year"><strong><?php esc_html_e( 'Year:', 'journalist-portfolio-hub' ); ?></strong></label><br>
+							<input type="text" id="award_year" name="award_year" class="widefat" value="<?php echo $editing_award ? esc_attr( get_post_meta( $editing_award->ID, '_award_year', true ) ) : ''; ?>" placeholder="e.g., 2025">
+						</p>
+
+						<p>
+							<label for="award_location"><strong><?php esc_html_e( 'Location / Region:', 'journalist-portfolio-hub' ); ?></strong></label><br>
+							<input type="text" id="award_location" name="award_location" class="widefat" value="<?php echo $editing_award ? esc_attr( get_post_meta( $editing_award->ID, '_award_location', true ) ) : ''; ?>" placeholder="e.g., International, Asia, Geneva">
+						</p>
+
+						<p>
+							<label for="award_icon"><strong><?php esc_html_e( 'Icon (Dashicon / Image URL):', 'journalist-portfolio-hub' ); ?></strong></label><br>
+							<input type="text" id="award_icon" name="award_icon" class="widefat" value="<?php echo $editing_award ? esc_attr( get_post_meta( $editing_award->ID, '_award_icon', true ) ) : 'dashicons-awards'; ?>" placeholder="dashicons-awards">
+						</p>
+
+						<p>
+							<label for="award_description"><strong><?php esc_html_e( 'Description / Impact Summary:', 'journalist-portfolio-hub' ); ?></strong></label><br>
+							<textarea id="award_description" name="award_description" rows="4" class="widefat" placeholder="Brief summary of the recognition..."><?php echo $editing_award ? esc_textarea( get_post_meta( $editing_award->ID, '_award_description', true ) ) : ''; ?></textarea>
+						</p>
+
+						<p style="margin-top: 20px; display: flex; gap: 10px;">
+							<button type="submit" class="button button-primary" style="background: #059669; border-color: #059669; color: #fff;"><?php echo $editing_award ? esc_html__( 'Update Award', 'journalist-portfolio-hub' ) : esc_html__( 'Add Award', 'journalist-portfolio-hub' ); ?></button>
+							<?php if ( $editing_award ) : ?>
+								<a href="<?php echo esc_url( admin_url( 'admin.php?page=jp-awards-settings' ) ); ?>" class="button button-secondary"><?php esc_html_e( 'Cancel Edit', 'journalist-portfolio-hub' ); ?></a>
+							<?php endif; ?>
+						</p>
+					</form>
+				</div>
+
+				<!-- Awards List Table -->
+				<div class="jp-admin-card" style="background: #fff; padding: 24px; border-radius: 8px; border: 1px solid #ccd0d4;">
+					<h2><?php esc_html_e( 'All Registered Awards', 'journalist-portfolio-hub' ); ?></h2>
+					<?php if ( ! empty( $awards ) ) : ?>
+						<table class="widefat striped">
+							<thead>
+								<tr>
+									<th style="width: 40px; text-align: center;"><?php esc_html_e( 'Icon', 'journalist-portfolio-hub' ); ?></th>
+									<th><?php esc_html_e( 'Title', 'journalist-portfolio-hub' ); ?></th>
+									<th><?php esc_html_e( 'Organization / For', 'journalist-portfolio-hub' ); ?></th>
+									<th><?php esc_html_e( 'Year', 'journalist-portfolio-hub' ); ?></th>
+									<th><?php esc_html_e( 'Location', 'journalist-portfolio-hub' ); ?></th>
+									<th style="width: 120px; text-align: center;"><?php esc_html_e( 'Actions', 'journalist-portfolio-hub' ); ?></th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php foreach ( $awards as $award ) :
+									$for      = get_post_meta( $award->ID, '_award_for', true );
+									$yr       = get_post_meta( $award->ID, '_award_year', true );
+									$loc      = get_post_meta( $award->ID, '_award_location', true );
+									$icon_cls = get_post_meta( $award->ID, '_award_icon', true );
+									if ( empty( $icon_cls ) ) {
+										$icon_cls = 'dashicons-awards';
+									}
+									?>
+									<tr>
+										<td style="text-align: center;">
+											<span class="dashicons <?php echo esc_attr( $icon_cls ); ?>" style="color: #059669; font-size: 20px;"></span>
+										</td>
+										<td><strong><?php echo esc_html( $award->post_title ); ?></strong></td>
+										<td><?php echo esc_html( $for ); ?></td>
+										<td><span class="badge" style="background: #e2e8f0; padding: 2px 8px; border-radius: 12px; font-weight: 600; font-size: 0.85em;"><?php echo esc_html( $yr ); ?></span></td>
+										<td><?php echo esc_html( $loc ); ?></td>
+										<td style="text-align: center;">
+											<a href="<?php echo esc_url( admin_url( 'admin.php?page=jp-awards-settings&edit_award=' . $award->ID ) ); ?>" class="button button-small"><?php esc_html_e( 'Edit', 'journalist-portfolio-hub' ); ?></a>
+											<form method="post" style="display: inline-block;" onsubmit="return confirm('Delete this award?');">
+												<?php wp_nonce_field( 'jp_save_award_admin', 'jp_award_admin_nonce' ); ?>
+												<input type="hidden" name="action" value="delete_award">
+												<input type="hidden" name="award_id" value="<?php echo esc_attr( $award->ID ); ?>">
+												<button type="submit" class="button button-small button-link-delete"><?php esc_html_e( 'Delete', 'journalist-portfolio-hub' ); ?></button>
+											</form>
+										</td>
+									</tr>
+								<?php endforeach; ?>
+							</tbody>
+						</table>
+					<?php else : ?>
+						<p style="color: #64748b;"><?php esc_html_e( 'No awards added yet. Create your first award using the form on the left.', 'journalist-portfolio-hub' ); ?></p>
+					<?php endif; ?>
+				</div>
+			</div>
 		</div>
 		<?php
 	}
