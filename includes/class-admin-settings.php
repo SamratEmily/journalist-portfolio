@@ -70,11 +70,11 @@ class Admin_Settings {
 			array( $this, 'render_general_settings_page' )
 		);
 
-		// Submenu 2: Follow Me (Social Links)
+		// Submenu 2: Social Links
 		add_submenu_page(
 			'journalist-portfolio-settings',
-			__( 'Follow Me (Social Links)', 'journalist-portfolio-hub' ),
-			__( 'Follow Me (Social Links)', 'journalist-portfolio-hub' ),
+			__( 'Social Links', 'journalist-portfolio-hub' ),
+			__( 'Social Links', 'journalist-portfolio-hub' ),
 			'manage_options',
 			'jp-social-links',
 			array( $this, 'render_social_links_page' )
