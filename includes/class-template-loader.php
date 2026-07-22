@@ -96,6 +96,14 @@ class Template_Loader {
 			}
 		}
 
+		// Multimedia Page Routing.
+		if ( is_page( 'multimedia' ) ) {
+			$multimedia_template = JP_HUB_PLUGIN_DIR . 'templates/page-multimedia.php';
+			if ( file_exists( $multimedia_template ) ) {
+				return $multimedia_template;
+			}
+		}
+
 		return $template;
 	}
 
@@ -109,5 +117,8 @@ class Template_Loader {
 		wp_enqueue_style( 'jp-portfolio-footer-style', JP_HUB_PLUGIN_URL . 'assets/css/portfolio-footer.css', array(), JP_HUB_VERSION );
 		wp_enqueue_style( 'jp-portfolio-awards-style', JP_HUB_PLUGIN_URL . 'assets/css/portfolio-awards.css', array(), JP_HUB_VERSION );
 		wp_enqueue_style( 'jp-portfolio-contact-style', JP_HUB_PLUGIN_URL . 'assets/css/portfolio-contact.css', array( 'jp-portfolio-style' ), JP_HUB_VERSION );
+		wp_enqueue_style( 'jp-portfolio-extra-style', JP_HUB_PLUGIN_URL . 'assets/css/portfolio-homepage-extra.css', array( 'jp-portfolio-style' ), JP_HUB_VERSION );
+
+		wp_enqueue_script( 'jp-multimedia-modal', JP_HUB_PLUGIN_URL . 'assets/js/multimedia-modal.js', array(), JP_HUB_VERSION, true );
 	}
 }

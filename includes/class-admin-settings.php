@@ -80,17 +80,8 @@ class Admin_Settings {
 			array( $this, 'render_social_links_page' )
 		);
 
-		// Submenu 3: Footer Settings
-		add_submenu_page(
-			'journalist-portfolio-settings',
-			__( 'Footer Settings', 'journalist-portfolio-hub' ),
-			__( 'Footer Settings', 'journalist-portfolio-hub' ),
-			'manage_options',
-			'jp-footer-settings',
-			array( $this, 'render_footer_settings_page' )
-		);
 
-		// Submenu 4: Awards & Fellowships
+		// Submenu 3: Awards & Fellowships
 		add_submenu_page(
 			'journalist-portfolio-settings',
 			__( 'Awards & Fellowships', 'journalist-portfolio-hub' ),
@@ -98,6 +89,25 @@ class Admin_Settings {
 			'manage_options',
 			'jp-awards-settings',
 			array( $this, 'render_awards_settings_page' )
+		);
+
+		// Submenu 4: Multimedia
+		add_submenu_page(
+			'journalist-portfolio-settings',
+			__( 'Multimedia', 'journalist-portfolio-hub' ),
+			__( 'Multimedia', 'journalist-portfolio-hub' ),
+			'manage_options',
+			'jp-multimedia-settings',
+			array( $this, 'render_multimedia_settings_page' )
+		);
+		// Submenu 5: Footer Settings
+		add_submenu_page(
+			'journalist-portfolio-settings',
+			__( 'Footer Settings', 'journalist-portfolio-hub' ),
+			__( 'Footer Settings', 'journalist-portfolio-hub' ),
+			'manage_options',
+			'jp-footer-settings',
+			array( $this, 'render_footer_settings_page' )
 		);
 	}
 
@@ -230,13 +240,36 @@ class Admin_Settings {
 	 * Enqueue Admin Assets.
 	 */
 	public function enqueue_admin_assets( string $hook ): void {
-		if ( false === strpos( $hook, 'journalist-portfolio' ) && false === strpos( $hook, 'jp-social-links' ) && false === strpos( $hook, 'jp-footer-settings' ) ) {
+		$page_param = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
+		$post_type  = isset( $_GET['post_type'] ) ? sanitize_text_field( wp_unslash( $_GET['post_type'] ) ) : '';
+
+		$is_portfolio_page = (
+			! empty( $page_param ) && (
+				false !== strpos( $page_param, 'jp' ) ||
+				false !== strpos( $page_param, 'portfolio' )
+			)
+		) || (
+			false !== strpos( $hook, 'journalist-portfolio' ) ||
+			false !== strpos( $hook, 'jp-social-links' ) ||
+			false !== strpos( $hook, 'jp-footer-settings' ) ||
+			false !== strpos( $hook, 'jp-awards-settings' ) ||
+			false !== strpos( $hook, 'jp-multimedia-settings' )
+		);
+
+		$screen        = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		$is_cpt_screen = (
+			! empty( $post_type ) && in_array( $post_type, array( 'jp_multimedia', 'story', 'jp_award' ), true )
+		) || (
+			$screen && ! empty( $screen->post_type ) && in_array( $screen->post_type, array( 'jp_multimedia', 'story', 'jp_award' ), true )
+		);
+
+		if ( ! $is_portfolio_page && ! $is_cpt_screen ) {
 			return;
 		}
 
 		wp_enqueue_media();
 		wp_enqueue_style( 'jp-admin-style', JP_HUB_PLUGIN_URL . 'assets/css/admin-style.css', array(), JP_HUB_VERSION );
-		wp_enqueue_script( 'jp-admin-media', JP_HUB_PLUGIN_URL . 'assets/js/admin-media.js', array( 'jquery' ), JP_HUB_VERSION, true );
+		wp_enqueue_script( 'jp-admin-media', JP_HUB_PLUGIN_URL . 'assets/js/admin-media.js', array( 'jquery', 'media-upload', 'media-views' ), JP_HUB_VERSION, true );
 	}
 
 	/**
@@ -835,4 +868,210 @@ class Admin_Settings {
 		</div>
 		<?php
 	}
+
+	/**
+	 * Render Submenu 5: Multimedia Page.
+	 */
+	public function render_multimedia_settings_page(): void {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		wp_enqueue_media();
+
+		// Handle Form Submissions (Add / Edit / Delete)
+		if ( isset( $_POST['jp_multimedia_admin_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['jp_multimedia_admin_nonce'] ) ), 'jp_save_multimedia_admin' ) ) {
+			if ( isset( $_POST['action'] ) && 'delete_media' === $_POST['action'] && isset( $_POST['media_id'] ) ) {
+				$del_id = absint( $_POST['media_id'] );
+				wp_delete_post( $del_id, true );
+				echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Multimedia item deleted successfully.', 'journalist-portfolio-hub' ) . '</p></div>';
+			} elseif ( isset( $_POST['media_title'] ) ) {
+				$media_id    = isset( $_POST['media_id'] ) ? absint( $_POST['media_id'] ) : 0;
+				$title       = sanitize_text_field( wp_unslash( $_POST['media_title'] ) );
+				$type        = sanitize_text_field( wp_unslash( $_POST['media_type'] ?? 'Video' ) );
+				$description = sanitize_textarea_field( wp_unslash( $_POST['media_description'] ?? '' ) );
+				$tags        = sanitize_text_field( wp_unslash( $_POST['media_tags'] ?? '' ) );
+				$youtube_url = esc_url_raw( wp_unslash( $_POST['media_youtube_url'] ?? '' ) );
+				$thumbnail   = esc_url_raw( wp_unslash( $_POST['media_thumbnail'] ?? '' ) );
+
+				if ( empty( $youtube_url ) ) {
+					echo '<div class="notice notice-error is-dismissible"><p>' . esc_html__( 'YouTube / Embed URL is a required field.', 'journalist-portfolio-hub' ) . '</p></div>';
+				} else {
+					$post_data = array(
+						'post_title'  => $title,
+						'post_status' => 'publish',
+						'post_type'   => 'jp_multimedia',
+					);
+
+					if ( $media_id > 0 ) {
+						$post_data['ID'] = $media_id;
+						$post_id         = wp_update_post( $post_data );
+					} else {
+						$post_id = wp_insert_post( $post_data );
+					}
+
+					if ( $post_id && ! is_wp_error( $post_id ) ) {
+						update_post_meta( $post_id, '_media_type', $type );
+						update_post_meta( $post_id, '_media_description', $description );
+						update_post_meta( $post_id, '_media_tags', $tags );
+						update_post_meta( $post_id, '_media_youtube_url', $youtube_url );
+						update_post_meta( $post_id, '_media_thumbnail', $thumbnail );
+
+						echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Multimedia item saved successfully.', 'journalist-portfolio-hub' ) . '</p></div>';
+					}
+				}
+			}
+		}
+
+		// Edit Mode Check
+		$editing_media = null;
+		if ( isset( $_GET['edit_media'] ) ) {
+			$edit_id       = absint( $_GET['edit_media'] );
+			$editing_media = get_post( $edit_id );
+		}
+
+		// Fetch All Multimedia Items
+		$items = get_posts(
+			array(
+				'post_type'      => 'jp_multimedia',
+				'post_status'    => 'publish',
+				'posts_per_page' => -1,
+				'orderby'        => 'date',
+				'order'          => 'DESC',
+			)
+		);
+		?>
+		<div class="wrap jp-admin-wrap">
+			<div class="jp-admin-header" style="margin-bottom: 24px;">
+				<h1><?php esc_html_e( 'Multimedia Management', 'journalist-portfolio-hub' ); ?></h1>
+				<p><?php esc_html_e( 'Add and manage videos, podcasts, photo essays, and data visualizations.', 'journalist-portfolio-hub' ); ?></p>
+			</div>
+
+			<div style="display: grid; grid-template-columns: 380px 1fr; gap: 30px;">
+				<!-- Add/Edit Form -->
+				<div class="jp-admin-card" style="background: #fff; padding: 24px; border-radius: 8px; border: 1px solid #ccd0d4;">
+					<h2><?php echo $editing_media ? esc_html__( 'Edit Multimedia Item', 'journalist-portfolio-hub' ) : esc_html__( 'Add New Multimedia Item', 'journalist-portfolio-hub' ); ?></h2>
+					<form method="post">
+						<?php wp_nonce_field( 'jp_save_multimedia_admin', 'jp_multimedia_admin_nonce' ); ?>
+						<?php if ( $editing_media ) : ?>
+							<input type="hidden" name="media_id" value="<?php echo esc_attr( $editing_media->ID ); ?>">
+						<?php endif; ?>
+
+						<p>
+							<label for="media_title"><strong><?php esc_html_e( 'Media Title:', 'journalist-portfolio-hub' ); ?></strong></label><br>
+							<input type="text" id="media_title" name="media_title" required class="widefat" value="<?php echo $editing_media ? esc_attr( $editing_media->post_title ) : ''; ?>" placeholder="e.g., Investigative Podcast Episode #1">
+						</p>
+
+						<p>
+							<label for="media_type"><strong><?php esc_html_e( 'Media Type:', 'journalist-portfolio-hub' ); ?></strong></label><br>
+							<?php $curr_type = $editing_media ? get_post_meta( $editing_media->ID, '_media_type', true ) : 'Video'; ?>
+							<select id="media_type" name="media_type" class="widefat">
+								<option value="Video" <?php selected( $curr_type, 'Video' ); ?>><?php esc_html_e( 'Video', 'journalist-portfolio-hub' ); ?></option>
+								<option value="Podcast" <?php selected( $curr_type, 'Podcast' ); ?>><?php esc_html_e( 'Podcast', 'journalist-portfolio-hub' ); ?></option>
+								<option value="Photo Essay" <?php selected( $curr_type, 'Photo Essay' ); ?>><?php esc_html_e( 'Photo Essay', 'journalist-portfolio-hub' ); ?></option>
+								<option value="Data Visualization" <?php selected( $curr_type, 'Data Visualization' ); ?>><?php esc_html_e( 'Data Visualization', 'journalist-portfolio-hub' ); ?></option>
+							</select>
+						</p>
+
+						<p>
+							<label for="media_tags"><strong><?php esc_html_e( 'Tags (comma-separated):', 'journalist-portfolio-hub' ); ?></strong></label><br>
+							<input type="text" id="media_tags" name="media_tags" class="widefat" value="<?php echo $editing_media ? esc_attr( get_post_meta( $editing_media->ID, '_media_tags', true ) ) : ''; ?>" placeholder="e.g., Climate, River Erosion">
+						</p>
+
+						<p>
+							<label for="media_youtube_url"><strong><?php esc_html_e( 'YouTube / Embed URL:', 'journalist-portfolio-hub' ); ?> <span style="color: #e11d48;">*</span></strong></label><br>
+							<input type="url" id="media_youtube_url" name="media_youtube_url" required class="widefat" value="<?php echo $editing_media ? esc_attr( get_post_meta( $editing_media->ID, '_media_youtube_url', true ) ) : ''; ?>" placeholder="https://www.youtube.com/watch?v=...">
+						</p>
+
+						<p>
+							<label for="media_thumbnail"><strong><?php esc_html_e( 'Preview Poster Thumbnail:', 'journalist-portfolio-hub' ); ?></strong></label><br>
+							<div style="display: flex; gap: 8px; margin-top: 4px;">
+								<input type="text" id="media_thumbnail" name="media_thumbnail" class="widefat jp-media-url" value="<?php echo $editing_media ? esc_attr( get_post_meta( $editing_media->ID, '_media_thumbnail', true ) ) : ''; ?>" placeholder="https://...">
+								<button type="button" class="button jp-upload-btn"><?php esc_html_e( 'Upload', 'journalist-portfolio-hub' ); ?></button>
+							</div>
+							<div class="jp-thumb-preview-box" style="margin-top: 8px;">
+								<?php $curr_thumb = $editing_media ? get_post_meta( $editing_media->ID, '_media_thumbnail', true ) : ''; ?>
+								<img class="jp-thumb-preview" src="<?php echo esc_url( $curr_thumb ); ?>" style="<?php echo empty( $curr_thumb ) ? 'display:none;' : ''; ?> max-width: 150px; max-height: 90px; border-radius: 4px; border: 1px solid #e2e8f0; object-fit: cover;" alt="Preview">
+							</div>
+						</p>
+
+						<p>
+							<label for="media_description"><strong><?php esc_html_e( 'Description:', 'journalist-portfolio-hub' ); ?></strong></label><br>
+							<textarea id="media_description" name="media_description" rows="4" class="widefat" placeholder="Brief summary of this multimedia production..."><?php echo $editing_media ? esc_textarea( get_post_meta( $editing_media->ID, '_media_description', true ) ) : ''; ?></textarea>
+						</p>
+
+						<p style="margin-top: 20px; display: flex; gap: 10px;">
+							<button type="submit" class="button button-primary" style="background: #059669; border-color: #059669; color: #fff;"><?php echo $editing_media ? esc_html__( 'Update Item', 'journalist-portfolio-hub' ) : esc_html__( 'Add Multimedia Item', 'journalist-portfolio-hub' ); ?></button>
+							<?php if ( $editing_media ) : ?>
+								<a href="<?php echo esc_url( admin_url( 'admin.php?page=jp-multimedia-settings' ) ); ?>" class="button button-secondary"><?php esc_html_e( 'Cancel Edit', 'journalist-portfolio-hub' ); ?></a>
+							<?php endif; ?>
+						</p>
+					</form>
+				</div>
+
+				<!-- Items List Table -->
+				<div class="jp-admin-card" style="background: #fff; padding: 24px; border-radius: 8px; border: 1px solid #ccd0d4;">
+					<h2><?php esc_html_e( 'All Multimedia Productions', 'journalist-portfolio-hub' ); ?></h2>
+					<?php if ( ! empty( $items ) ) : ?>
+						<table class="widefat striped">
+							<thead>
+								<tr>
+									<th style="width: 70px;"><?php esc_html_e( 'Poster', 'journalist-portfolio-hub' ); ?></th>
+									<th><?php esc_html_e( 'Title', 'journalist-portfolio-hub' ); ?></th>
+									<th><?php esc_html_e( 'Type', 'journalist-portfolio-hub' ); ?></th>
+									<th><?php esc_html_e( 'Tags', 'journalist-portfolio-hub' ); ?></th>
+									<th><?php esc_html_e( 'YouTube URL', 'journalist-portfolio-hub' ); ?></th>
+									<th style="width: 120px; text-align: center;"><?php esc_html_e( 'Actions', 'journalist-portfolio-hub' ); ?></th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php foreach ( $items as $item ) :
+									$type_val  = get_post_meta( $item->ID, '_media_type', true );
+									$tags_val  = get_post_meta( $item->ID, '_media_tags', true );
+									$yt_val    = get_post_meta( $item->ID, '_media_youtube_url', true );
+									$thumb_val = get_post_meta( $item->ID, '_media_thumbnail', true );
+									if ( empty( $thumb_val ) && has_post_thumbnail( $item->ID ) ) {
+										$thumb_val = get_the_post_thumbnail_url( $item->ID, 'thumbnail' );
+									}
+									?>
+									<tr>
+										<td>
+											<?php if ( ! empty( $thumb_val ) ) : ?>
+												<img src="<?php echo esc_url( $thumb_val ); ?>" alt="" style="width: 60px; height: 35px; object-fit: cover; border-radius: 4px;">
+											<?php else : ?>
+												<div style="width: 60px; height: 35px; background: #e2e8f0; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 12px;">No img</div>
+											<?php endif; ?>
+										</td>
+										<td><strong><?php echo esc_html( $item->post_title ); ?></strong></td>
+										<td><span class="badge" style="background: #059669; color: #fff; padding: 2px 8px; border-radius: 12px; font-weight: 600; font-size: 0.8em;"><?php echo esc_html( $type_val ? $type_val : 'Video' ); ?></span></td>
+										<td><?php echo esc_html( $tags_val ); ?></td>
+										<td>
+											<?php if ( ! empty( $yt_val ) ) : ?>
+												<a href="<?php echo esc_url( $yt_val ); ?>" target="_blank" style="font-size: 0.85em; text-decoration: underline;"><?php echo esc_html( wp_trim_words( $yt_val, 3, '…' ) ); ?></a>
+											<?php else : ?>
+												<span style="color: #94a3b8;">—</span>
+											<?php endif; ?>
+										</td>
+										<td style="text-align: center;">
+											<a href="<?php echo esc_url( admin_url( 'admin.php?page=jp-multimedia-settings&edit_media=' . $item->ID ) ); ?>" class="button button-small"><?php esc_html_e( 'Edit', 'journalist-portfolio-hub' ); ?></a>
+											<form method="post" style="display: inline-block;" onsubmit="return confirm('Delete this multimedia item?');">
+												<?php wp_nonce_field( 'jp_save_multimedia_admin', 'jp_multimedia_admin_nonce' ); ?>
+												<input type="hidden" name="action" value="delete_media">
+												<input type="hidden" name="media_id" value="<?php echo esc_attr( $item->ID ); ?>">
+												<button type="submit" class="button button-small button-link-delete"><?php esc_html_e( 'Delete', 'journalist-portfolio-hub' ); ?></button>
+											</form>
+										</td>
+									</tr>
+								<?php endforeach; ?>
+							</tbody>
+						</table>
+					<?php else : ?>
+						<p style="color: #64748b;"><?php esc_html_e( 'No multimedia items added yet. Create your first production using the form on the left.', 'journalist-portfolio-hub' ); ?></p>
+					<?php endif; ?>
+				</div>
+			</div>
+		</div>
+		<?php
+	}
 }
+

@@ -36,6 +36,8 @@ class Shortcodes {
 		add_shortcode( 'jp_cv_link', array( $this, 'render_cv_link' ) );
 		add_shortcode( 'jp_media_kit_link', array( $this, 'render_media_kit_link' ) );
 		add_shortcode( 'jp_awards_carousel', array( $this, 'render_awards_carousel' ) );
+		add_shortcode( 'jp_multimedia_section', array( $this, 'render_multimedia_section' ) );
+		add_shortcode( 'jp_about_brief_section', array( $this, 'render_about_brief_section' ) );
 	}
 
 	/**
@@ -222,4 +224,143 @@ class Shortcodes {
 		<?php
 		return ob_get_clean();
 	}
+
+	/**
+	 * Render Multimedia Homepage Section Shortcode [jp_multimedia_section]
+	 *
+	 * @param array|string $atts Shortcode attributes.
+	 * @return string HTML output.
+	 */
+	public function render_multimedia_section( $atts = array() ): string {
+		$items = get_posts(
+			array(
+				'post_type'      => 'jp_multimedia',
+				'post_status'    => 'publish',
+				'posts_per_page' => 4,
+				'orderby'        => 'date',
+				'order'          => 'DESC',
+			)
+		);
+
+		if ( empty( $items ) ) {
+			return '';
+		}
+
+		ob_start();
+		?>
+		<section class="jp-section jp-multimedia-section" style="padding-top: 50px; padding-bottom: 50px; background: #ffffff;">
+			<div class="jp-container">
+				<div class="jp-multimedia-header-row">
+					<div class="jp-multimedia-title-wrap">
+						<span class="jp-section-kicker" style="font-size: 0.8rem; font-weight: 700; color: #059669; letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-bottom: 4px;"><?php esc_html_e( 'VISUAL & AUDIO REPORTING', 'journalist-portfolio-hub' ); ?></span>
+						<h2 style="font-size: 1.75rem; font-weight: 800; color: #0f172a; margin: 0; letter-spacing: -0.02em;"><?php esc_html_e( 'MULTIMEDIA', 'journalist-portfolio-hub' ); ?></h2>
+					</div>
+					<a href="<?php echo esc_url( home_url( '/multimedia' ) ); ?>" class="jp-read-more" style="font-size: 0.95rem; font-weight: 700;">
+						<?php esc_html_e( 'View All', 'journalist-portfolio-hub' ); ?> &rarr;
+					</a>
+				</div>
+
+				<div class="jp-multimedia-grid">
+					<?php foreach ( $items as $item ) :
+						$type        = get_post_meta( $item->ID, '_media_type', true );
+						$tags        = get_post_meta( $item->ID, '_media_tags', true );
+						$youtube_url = get_post_meta( $item->ID, '_media_youtube_url', true );
+						$thumbnail   = get_post_meta( $item->ID, '_media_thumbnail', true );
+						$desc        = get_post_meta( $item->ID, '_media_description', true );
+
+						if ( empty( $thumbnail ) && has_post_thumbnail( $item->ID ) ) {
+							$thumbnail = get_the_post_thumbnail_url( $item->ID, 'large' );
+						}
+						if ( empty( $thumbnail ) ) {
+							$thumbnail = 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?auto=format&fit=crop&w=800&q=80';
+						}
+						if ( empty( $type ) ) {
+							$type = 'Video';
+						}
+						?>
+						<article class="jp-multimedia-card" data-video-url="<?php echo esc_url( $youtube_url ); ?>" data-title="<?php echo esc_attr( $item->post_title ); ?>">
+							<div class="jp-multimedia-thumb-wrap">
+								<img src="<?php echo esc_url( $thumbnail ); ?>" alt="<?php echo esc_attr( $item->post_title ); ?>" class="jp-multimedia-thumb">
+								<div class="jp-multimedia-overlay">
+									<span class="jp-multimedia-play-btn" aria-label="<?php esc_attr_e( 'Play Media', 'journalist-portfolio-hub' ); ?>">
+										<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+									</span>
+								</div>
+								<span class="jp-multimedia-badge"><?php echo esc_html( $type ); ?></span>
+							</div>
+							<div class="jp-multimedia-content">
+								<?php if ( ! empty( $tags ) ) : ?>
+									<div class="jp-multimedia-tags"><?php echo esc_html( $tags ); ?></div>
+								<?php endif; ?>
+								<h3 class="jp-multimedia-title">
+									<a href="<?php echo ! empty( $youtube_url ) ? esc_url( $youtube_url ) : '#'; ?>" class="jp-multimedia-link" <?php echo ! empty( $youtube_url ) ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>>
+										<?php echo esc_html( $item->post_title ); ?>
+									</a>
+								</h3>
+								<?php if ( ! empty( $desc ) ) : ?>
+									<p class="jp-multimedia-desc"><?php echo esc_html( wp_trim_words( $desc, 14 ) ); ?></p>
+								<?php endif; ?>
+							</div>
+						</article>
+					<?php endforeach; ?>
+				</div>
+			</div>
+		</section>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
+	 * Render About Me Brief Section Shortcode [jp_about_brief_section]
+	 *
+	 * @param array|string $atts Shortcode attributes.
+	 * @return string HTML output.
+	 */
+	public function render_about_brief_section( $atts = array() ): string {
+		$full_name     = get_option( 'jp_full_name', get_bloginfo( 'name' ) );
+		$designation   = get_option( 'jp_designation', 'Investigative & Environmental Journalist' );
+		$bio_text      = get_option( 'jp_bio_text', 'Dedicated to uncovering in-depth human stories, global climate challenges, and investigative truth through rigorous reporting and human-centered storytelling.' );
+		$profile_image = get_option( 'jp_profile_image', '' );
+		$about_page    = get_page_by_path( 'about' );
+		$about_url     = $about_page ? get_permalink( $about_page->ID ) : home_url( '/about' );
+
+		$excerpt_text = wp_trim_words( $bio_text, 48, '...' );
+
+		ob_start();
+		?>
+		<section class="jp-section jp-about-brief-section" style="padding-top: 60px; padding-bottom: 70px; background: #F9F9FB;">
+			<div class="jp-container">
+				<div class="jp-about-brief-grid">
+					<!-- Left Column: Profile Frame -->
+					<div class="jp-about-brief-card-frame">
+						<?php if ( ! empty( $profile_image ) ) : ?>
+							<img src="<?php echo esc_url( $profile_image ); ?>" alt="<?php echo esc_attr( $full_name ); ?>" class="jp-about-brief-img">
+						<?php else : ?>
+							<div class="jp-about-brief-avatar-placeholder">
+								<span class="dashicons dashicons-admin-users" style="font-size: 72px; width: 72px; height: 72px; color: #94a3b8;"></span>
+							</div>
+						<?php endif; ?>
+					</div>
+
+					<!-- Right Column: Details & CTA -->
+					<div class="jp-about-brief-content">
+						<span class="jp-about-brief-kicker"><?php esc_html_e( 'ABOUT ME', 'journalist-portfolio-hub' ); ?></span>
+						<h2 class="jp-about-brief-name"><?php echo esc_html( $full_name ); ?></h2>
+						<div class="jp-about-brief-designation"><?php echo esc_html( $designation ); ?></div>
+
+						<p class="jp-about-brief-excerpt">
+							<?php echo esc_html( $excerpt_text ); ?>
+						</p>
+
+						<a href="<?php echo esc_url( $about_url ); ?>" class="jp-about-brief-btn">
+							<span><?php esc_html_e( 'Read Full Biography', 'journalist-portfolio-hub' ); ?> &rarr;</span>
+						</a>
+					</div>
+				</div>
+			</div>
+		</section>
+		<?php
+		return ob_get_clean();
+	}
 }
+

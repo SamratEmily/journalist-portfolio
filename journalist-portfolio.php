@@ -25,6 +25,7 @@ define( 'JP_HUB_PLUGIN_FILE', __FILE__ );
 require_once JP_HUB_PLUGIN_DIR . 'includes/class-activator.php';
 require_once JP_HUB_PLUGIN_DIR . 'includes/class-cpt-stories.php';
 require_once JP_HUB_PLUGIN_DIR . 'includes/class-cpt-awards.php';
+require_once JP_HUB_PLUGIN_DIR . 'includes/class-cpt-multimedia.php';
 require_once JP_HUB_PLUGIN_DIR . 'includes/class-admin-settings.php';
 require_once JP_HUB_PLUGIN_DIR . 'includes/class-template-loader.php';
 require_once JP_HUB_PLUGIN_DIR . 'includes/class-shortcodes.php';
@@ -74,6 +75,7 @@ final class Journalist_Portfolio_Hub {
 		// Initialize Custom Post Types.
 		\JournalistPortfolio\CPT_Stories::get_instance();
 		\JournalistPortfolio\CPT_Awards::get_instance();
+		\JournalistPortfolio\CPT_Multimedia::get_instance();
 
 		// Initialize Admin Settings.
 		if ( is_admin() ) {
@@ -140,3 +142,22 @@ if ( ! function_exists( 'jp_render_footer' ) ) {
 		}
 	}
 }
+
+if ( ! function_exists( 'jp_render_multimedia' ) ) {
+	/**
+	 * Echo the Multimedia Homepage Section HTML output directly in PHP templates.
+	 */
+	function jp_render_multimedia(): void {
+		echo do_shortcode( '[jp_multimedia_section]' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	}
+}
+
+if ( ! function_exists( 'jp_render_about_brief' ) ) {
+	/**
+	 * Echo the Brief About Me Homepage Section HTML output directly in PHP templates.
+	 */
+	function jp_render_about_brief(): void {
+		echo do_shortcode( '[jp_about_brief_section]' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	}
+}
+

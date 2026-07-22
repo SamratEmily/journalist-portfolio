@@ -24,7 +24,6 @@ $featured_story_id = 0;
 	<div class="jp-container">
 		<div class="jp-hero-grid">
 			<div class="jp-hero-content">
-				<span class="jp-hero-badge"><?php esc_html_e( 'Journalist Portfolio', 'journalist-portfolio-hub' ); ?></span>
 				<h1 class="jp-hero-title"><?php echo esc_html( $full_name ); ?></h1>
 				<div class="jp-hero-designation"><?php echo esc_html( $designation ); ?></div>
 
@@ -181,7 +180,7 @@ $featured_story_id = 0;
 	<div class="jp-container">
 		<div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px;">
 			<div>
-				<h2 class="jp-section-title"><?php esc_html_e( 'Stories', 'journalist-portfolio-hub' ); ?></h2>
+				<h2 class="jp-section-title"><?php esc_html_e( 'Latest Stories', 'journalist-portfolio-hub' ); ?></h2>
 				<p class="jp-section-subtitle"><?php esc_html_e( 'Explore recent investigative reporting, features, and field dispatches.', 'journalist-portfolio-hub' ); ?></p>
 			</div>
 			<a href="<?php echo esc_url( home_url( '/stories' ) ); ?>" class="jp-read-more" style="font-size: 1rem; font-weight: 700;">
@@ -194,7 +193,7 @@ $featured_story_id = 0;
 		$stories_args = array(
 			'post_type'      => 'story',
 			'post_status'    => 'publish',
-			'posts_per_page' => 6,
+			'posts_per_page' => 3,
 			'post__not_in'   => $featured_story_id > 0 ? array( $featured_story_id ) : array(),
 			'orderby'        => 'date',
 			'order'          => 'DESC',
@@ -285,4 +284,11 @@ $featured_story_id = 0;
 <!-- 3. AWARDS & FELLOWSHIPS CAROUSEL SECTION -->
 <?php echo do_shortcode( '[jp_awards_carousel]' ); ?>
 
+<!-- 4. MULTIMEDIA SECTION (Rendered directly below Awards) -->
+<?php jp_render_multimedia(); ?>
+
+<!-- 5. BRIEF ABOUT ME SECTION (Rendered directly below Multimedia) -->
+<?php jp_render_about_brief(); ?>
+
 <?php require JP_HUB_PLUGIN_DIR . 'templates/footer.php'; ?>
+

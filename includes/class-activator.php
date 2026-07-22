@@ -17,6 +17,7 @@ class Activator {
 		// Ensure CPTs and Taxonomies are registered before flushing rewrite rules.
 		CPT_Stories::register_post_type_and_taxonomy();
 		CPT_Awards::register_post_type();
+		CPT_Multimedia::register_post_type();
 
 		// Auto-generate required pages.
 		self::create_required_pages();
