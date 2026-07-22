@@ -109,6 +109,16 @@ class Admin_Settings {
 			'jp-footer-settings',
 			array( $this, 'render_footer_settings_page' )
 		);
+
+		// Submenu 6: Re-seed Demo Data
+		add_submenu_page(
+			'journalist-portfolio-settings',
+			__( 'Re-seed Demo Data', 'journalist-portfolio-hub' ),
+			__( 'Re-seed Demo Data', 'journalist-portfolio-hub' ),
+			'manage_options',
+			'jp-reseed-demo-settings',
+			array( \JournalistPortfolio\CPT_Stories::get_instance(), 'render_reseed_demo_page' )
+		);
 	}
 
 	/**

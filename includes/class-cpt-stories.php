@@ -153,6 +153,15 @@ class CPT_Stories {
 			'jp-publications',
 			array( $this, 'render_publications_page' )
 		);
+
+		add_submenu_page(
+			'edit.php?post_type=story',
+			__( 'Re-seed Demo Data', 'journalist-portfolio-hub' ),
+			__( 'Re-seed Demo Data', 'journalist-portfolio-hub' ),
+			'manage_options',
+			'jp-reseed-demo',
+			array( $this, 'render_reseed_demo_page' )
+		);
 	}
 
 	/**
@@ -171,13 +180,8 @@ class CPT_Stories {
 				$pubs_list = array();
 			}
 
-			// Seed Demo Action
-			if ( isset( $_POST['action'] ) && 'seed_demo' === $_POST['action'] ) {
-				Demo_Seeder::seed();
-				echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Demo stories, categories, publications, and featured images have been successfully seeded!', 'journalist-portfolio-hub' ) . '</p></div>';
-			}
 			// Delete Action
-			elseif ( isset( $_POST['action'] ) && 'delete' === $_POST['action'] && isset( $_POST['pub_index'] ) ) {
+			if ( isset( $_POST['action'] ) && 'delete' === $_POST['action'] && isset( $_POST['pub_index'] ) ) {
 				$idx = absint( $_POST['pub_index'] );
 				if ( isset( $pubs_list[ $idx ] ) ) {
 					array_splice( $pubs_list, $idx, 1 );
@@ -206,18 +210,9 @@ class CPT_Stories {
 		}
 		?>
 		<div class="wrap jp-admin-wrap">
-			<div class="jp-admin-header" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;">
-				<div>
-					<h1><?php esc_html_e( 'Publications & Media Outlets', 'journalist-portfolio-hub' ); ?></h1>
-					<p><?php esc_html_e( 'Add and manage news outlets, publishers, and media platforms where your stories are published.', 'journalist-portfolio-hub' ); ?></p>
-				</div>
-				<form method="post">
-					<?php wp_nonce_field( 'jp_save_publications', 'jp_pub_nonce' ); ?>
-					<input type="hidden" name="action" value="seed_demo">
-					<button type="submit" class="button" style="background: #059669; color: #fff; border-color: #059669; font-weight: 600; padding: 6px 16px;">
-						✨ <?php esc_html_e( 'Re-seed Demo Stories & Images', 'journalist-portfolio-hub' ); ?>
-					</button>
-				</form>
+			<div class="jp-admin-header" style="margin-bottom: 24px;">
+				<h1><?php esc_html_e( 'Publications & Media Outlets', 'journalist-portfolio-hub' ); ?></h1>
+				<p><?php esc_html_e( 'Add and manage news outlets, publishers, and media platforms where your stories are published.', 'journalist-portfolio-hub' ); ?></p>
 			</div>
 
 			<div style="display: grid; grid-template-columns: 360px 1fr; gap: 30px;">
@@ -449,4 +444,91 @@ class CPT_Stories {
 
 		return sprintf( __( '%d min read', 'journalist-portfolio-hub' ), $minutes );
 	}
+
+	/**
+	 * Render Re-seed Demo Data Submenu Page.
+	 */
+	public function render_reseed_demo_page(): void {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		$seeded_message = '';
+		if ( isset( $_POST['jp_reseed_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['jp_reseed_nonce'] ) ), 'jp_reseed_demo_action' ) ) {
+			if ( isset( $_POST['action'] ) && 'seed_demo' === $_POST['action'] ) {
+				Demo_Seeder::seed();
+				$seeded_message = __( 'Demo stories, publications, categories, awards, and multimedia items have been successfully seeded!', 'journalist-portfolio-hub' );
+			}
+		}
+		?>
+		<div class="wrap jp-admin-wrap" style="max-width: 960px; margin-top: 20px;">
+			
+			<?php if ( ! empty( $seeded_message ) ) : ?>
+				<div class="notice notice-success is-dismissible" style="border-left-color: #059669; padding: 12px 16px;">
+					<p style="font-size: 1rem; font-weight: 600; color: #065f46; margin: 0;">✨ <?php echo esc_html( $seeded_message ); ?></p>
+				</div>
+			<?php endif; ?>
+
+			<!-- Header Banner -->
+			<div class="jp-admin-header" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #ffffff; padding: 32px; border-radius: 12px; margin-bottom: 28px; box-shadow: 0 4px 20px rgba(15,23,42,0.15);">
+				<span style="background: #059669; color: #ffffff; font-size: 0.75rem; font-weight: 800; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.08em; display: inline-block; margin-bottom: 12px;"><?php esc_html_e( 'Demo Content Generator', 'journalist-portfolio-hub' ); ?></span>
+				<h1 style="color: #ffffff; font-size: 2rem; font-weight: 800; margin: 0 0 8px; font-family: var(--jp-font-serif, Georgia, serif);"><?php esc_html_e( 'Re-seed Demo Portfolio Content', 'journalist-portfolio-hub' ); ?></h1>
+				<p style="color: #94a3b8; font-size: 1rem; margin: 0; max-width: 650px; line-height: 1.6;"><?php esc_html_e( 'Quickly populate or reset your portfolio with high-quality demo stories, climate/investigative reporting categories, media outlets, awards, and multimedia productions.', 'journalist-portfolio-hub' ); ?></p>
+			</div>
+
+			<!-- Action Card -->
+			<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 36px; box-shadow: 0 4px 14px rgba(15,23,42,0.06);">
+				<h2 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;"><?php esc_html_e( 'Items Included in Demo Seed:', 'journalist-portfolio-hub' ); ?></h2>
+				
+				<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 32px;">
+					<div style="background: #f8fafc; padding: 18px; border-radius: 10px; border: 1px solid #e2e8f0; display: flex; gap: 14px; align-items: flex-start;">
+						<span class="dashicons dashicons-format-aside" style="font-size: 28px; width: 28px; height: 28px; color: #059669; flex-shrink: 0; margin-top: 2px;"></span>
+						<div>
+							<strong style="color: #0f172a; font-size: 0.98rem; display: block; margin-bottom: 4px;"><?php esc_html_e( '4 Full Demo Stories', 'journalist-portfolio-hub' ); ?></strong>
+							<span style="color: #64748b; font-size: 0.88rem; line-height: 1.45; display: block;"><?php esc_html_e( 'Includes kicker headings, publisher meta, estimated reading time, and editorial photos.', 'journalist-portfolio-hub' ); ?></span>
+						</div>
+					</div>
+
+					<div style="background: #f8fafc; padding: 18px; border-radius: 10px; border: 1px solid #e2e8f0; display: flex; gap: 14px; align-items: flex-start;">
+						<span class="dashicons dashicons-networking" style="font-size: 28px; width: 28px; height: 28px; color: #059669; flex-shrink: 0; margin-top: 2px;"></span>
+						<div>
+							<strong style="color: #0f172a; font-size: 0.98rem; display: block; margin-bottom: 4px;"><?php esc_html_e( '4 Publications & Media Outlets', 'journalist-portfolio-hub' ); ?></strong>
+							<span style="color: #64748b; font-size: 0.88rem; line-height: 1.45; display: block;"><?php esc_html_e( 'Kaler Kantho, The Daily Star, Reuters, and Prothom Alo with direct website links.', 'journalist-portfolio-hub' ); ?></span>
+						</div>
+					</div>
+
+					<div style="background: #f8fafc; padding: 18px; border-radius: 10px; border: 1px solid #e2e8f0; display: flex; gap: 14px; align-items: flex-start;">
+						<span class="dashicons dashicons-awards" style="font-size: 28px; width: 28px; height: 28px; color: #059669; flex-shrink: 0; margin-top: 2px;"></span>
+						<div>
+							<strong style="color: #0f172a; font-size: 0.98rem; display: block; margin-bottom: 4px;"><?php esc_html_e( '6 Awards & Fellowships', 'journalist-portfolio-hub' ); ?></strong>
+							<span style="color: #64748b; font-size: 0.88rem; line-height: 1.45; display: block;"><?php esc_html_e( 'GCCA+ Youth Awards, South Asian Fellowship, IFCN Poynter Grant, and more.', 'journalist-portfolio-hub' ); ?></span>
+						</div>
+					</div>
+
+					<div style="background: #f8fafc; padding: 18px; border-radius: 10px; border: 1px solid #e2e8f0; display: flex; gap: 14px; align-items: flex-start;">
+						<span class="dashicons dashicons-video-alt3" style="font-size: 28px; width: 28px; height: 28px; color: #059669; flex-shrink: 0; margin-top: 2px;"></span>
+						<div>
+							<strong style="color: #0f172a; font-size: 0.98rem; display: block; margin-bottom: 4px;"><?php esc_html_e( '4 Multimedia Productions', 'journalist-portfolio-hub' ); ?></strong>
+							<span style="color: #64748b; font-size: 0.88rem; line-height: 1.45; display: block;"><?php esc_html_e( 'Video documentaries, podcasts, photo essays, and data visualization projects.', 'journalist-portfolio-hub' ); ?></span>
+						</div>
+					</div>
+				</div>
+
+				<form method="post" onsubmit="return confirm('<?php esc_js( esc_html_e( 'Are you sure you want to re-seed demo portfolio content?', 'journalist-portfolio-hub' ) ); ?>');">
+					<?php wp_nonce_field( 'jp_reseed_demo_action', 'jp_reseed_nonce' ); ?>
+					<input type="hidden" name="action" value="seed_demo">
+					<div style="display: flex; align-items: center; justify-content: space-between; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 20px 24px; border-radius: 10px;">
+						<div style="color: #065f46; font-size: 0.95rem;">
+							<strong><?php esc_html_e( 'Ready to generate demo data?', 'journalist-portfolio-hub' ); ?></strong> <?php esc_html_e( 'Click the button on the right to populate your portfolio.', 'journalist-portfolio-hub' ); ?>
+						</div>
+						<button type="submit" class="button button-primary" style="background: #059669; border-color: #059669; color: #ffffff; font-size: 0.95rem; font-weight: 700; padding: 8px 24px; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(5,150,105,0.3); cursor: pointer;">
+							✨ <?php esc_html_e( 'Re-seed Demo Stories & Images', 'journalist-portfolio-hub' ); ?>
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+		<?php
+	}
 }
+
