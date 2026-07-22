@@ -20,6 +20,9 @@ class Activator {
 		// Auto-generate required pages.
 		self::create_required_pages();
 
+		// Seed Demo Stories, Categories, Publications, and Featured Images.
+		Demo_Seeder::seed();
+
 		// Flush rewrite rules to prevent 404 on custom post types.
 		flush_rewrite_rules();
 	}

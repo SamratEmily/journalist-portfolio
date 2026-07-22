@@ -84,9 +84,13 @@ $categories = get_terms(
 				while ( $stories_query->have_posts() ) :
 					$stories_query->the_post();
 
-					$kicker      = get_post_meta( get_the_ID(), '_story_heading', true );
-					$custom_desc = get_post_meta( get_the_ID(), '_story_description', true );
-					$is_feat     = get_post_meta( get_the_ID(), '_story_is_featured', true );
+					$kicker        = get_post_meta( get_the_ID(), '_story_heading', true );
+					$publisher     = get_post_meta( get_the_ID(), '_story_publisher', true );
+					$publisher_url = get_post_meta( get_the_ID(), '_story_publisher_url', true );
+					$custom_desc   = get_post_meta( get_the_ID(), '_story_description', true );
+					$is_feat       = get_post_meta( get_the_ID(), '_story_is_featured', true );
+					$read_time     = \JournalistPortfolio\CPT_Stories::get_reading_time( get_the_ID() );
+
 					$story_cats  = get_the_terms( get_the_ID(), 'story_category' );
 					$primary_cat = ( ! empty( $story_cats ) && ! is_wp_error( $story_cats ) ) ? $story_cats[0]->name : 'General';
 					$cat_link    = ( ! empty( $story_cats ) && ! is_wp_error( $story_cats ) ) ? get_term_link( $story_cats[0] ) : '#';
@@ -107,10 +111,20 @@ $categories = get_terms(
 						</a>
 
 						<div class="jp-story-content">
-							<div class="jp-story-meta">
+							<div class="jp-story-meta" style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 0.825rem; color: var(--jp-text-muted);">
 								<a href="<?php echo esc_url( $cat_link ); ?>" class="jp-story-category-tag"><?php echo esc_html( $primary_cat ); ?></a>
+								
+								<?php if ( ! empty( $publisher ) ) : ?>
+									<span>&bull;</span>
+									<?php if ( ! empty( $publisher_url ) ) : ?>
+										<a href="<?php echo esc_url( $publisher_url ); ?>" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline; font-weight: 600;"><?php echo esc_html( $publisher ); ?></a>
+									<?php else : ?>
+										<span><?php echo esc_html( $publisher ); ?></span>
+									<?php endif; ?>
+								<?php endif; ?>
+
 								<span>&bull;</span>
-								<time><?php echo get_the_date(); ?></time>
+								<span><?php echo esc_html( $read_time ); ?></span>
 							</div>
 
 							<?php if ( ! empty( $kicker ) ) : ?>

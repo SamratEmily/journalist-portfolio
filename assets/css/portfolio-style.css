@@ -279,6 +279,121 @@ body.jp-portfolio-active {
     margin: 0 0 36px 0;
 }
 
+/* Single Featured Investigation Card (Horizontal Split 400x300) */
+.jp-featured-card-horizontal {
+    background: #ffffff;
+    border: 1px solid var(--jp-border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    min-height: 300px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    margin-bottom: 50px;
+    transition: var(--jp-transition);
+}
+
+.jp-featured-card-horizontal:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    border-color: #cbd5e1;
+}
+
+.jp-featured-thumb-col {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    background: #1e293b;
+    width: 400px;
+    height: 300px;
+}
+
+.jp-featured-thumb-img {
+    width: 400px;
+    height: 300px;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.jp-featured-card-horizontal:hover .jp-featured-thumb-img {
+    transform: scale(1.03);
+}
+
+.jp-featured-content-col {
+    padding: 36px 42px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.jp-featured-kicker {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--jp-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 12px;
+}
+
+.jp-featured-title {
+    font-family: var(--jp-font-serif);
+    font-size: 1.85rem;
+    font-weight: 700;
+    line-height: 1.25;
+    margin: 0 0 14px 0;
+}
+
+.jp-featured-title a {
+    color: var(--jp-text-dark);
+    text-decoration: none;
+    transition: var(--jp-transition);
+}
+
+.jp-featured-title a:hover {
+    color: var(--jp-accent);
+}
+
+.jp-featured-excerpt {
+    font-size: 0.975rem;
+    color: var(--jp-text-main);
+    line-height: 1.65;
+    margin-bottom: 24px;
+}
+
+.jp-featured-footer-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding-top: 18px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.jp-featured-meta-info {
+    font-size: 0.85rem;
+    color: var(--jp-text-muted);
+    font-weight: 500;
+}
+
+.jp-featured-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #064e3b;
+    color: #ffffff !important;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: var(--jp-transition);
+}
+
+.jp-featured-cta-btn:hover {
+    background: #047857;
+    transform: translateY(-1px);
+}
+
 .jp-stories-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));

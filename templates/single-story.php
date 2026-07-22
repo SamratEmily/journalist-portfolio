@@ -12,8 +12,12 @@ require JP_HUB_PLUGIN_DIR . 'templates/header-nav.php';
 while ( have_posts() ) :
 	the_post();
 
-	$kicker      = get_post_meta( get_the_ID(), '_story_heading', true );
-	$custom_desc = get_post_meta( get_the_ID(), '_story_description', true );
+	$kicker        = get_post_meta( get_the_ID(), '_story_heading', true );
+	$publisher     = get_post_meta( get_the_ID(), '_story_publisher', true );
+	$publisher_url = get_post_meta( get_the_ID(), '_story_publisher_url', true );
+	$custom_desc   = get_post_meta( get_the_ID(), '_story_description', true );
+	$read_time     = \JournalistPortfolio\CPT_Stories::get_reading_time( get_the_ID() );
+
 	$story_cats  = get_the_terms( get_the_ID(), 'story_category' );
 	$primary_cat = ( ! empty( $story_cats ) && ! is_wp_error( $story_cats ) ) ? $story_cats[0]->name : 'General';
 	$cat_link    = ( ! empty( $story_cats ) && ! is_wp_error( $story_cats ) ) ? get_term_link( $story_cats[0] ) : '#';
@@ -28,12 +32,24 @@ while ( have_posts() ) :
 					&larr; <?php esc_html_e( 'Back to All Stories', 'journalist-portfolio-hub' ); ?>
 				</a>
 
-				<div class="jp-story-meta" style="margin-top: 12px; font-size: 0.9rem;">
+				<div class="jp-story-meta" style="margin-top: 12px; font-size: 0.9rem; display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
 					<a href="<?php echo esc_url( $cat_link ); ?>" class="jp-story-category-tag"><?php echo esc_html( $primary_cat ); ?></a>
+					
+					<?php if ( ! empty( $publisher ) ) : ?>
+						<span>&bull;</span>
+						<?php if ( ! empty( $publisher_url ) ) : ?>
+							<a href="<?php echo esc_url( $publisher_url ); ?>" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline; font-weight: 600;"><?php echo esc_html( $publisher ); ?></a>
+						<?php else : ?>
+							<span><?php echo esc_html( $publisher ); ?></span>
+						<?php endif; ?>
+					<?php endif; ?>
+
 					<span>&bull;</span>
 					<time><?php echo get_the_date( 'F j, Y' ); ?></time>
 					<span>&bull;</span>
 					<span><?php printf( esc_html__( 'By %s', 'journalist-portfolio-hub' ), esc_html( $author_name ) ); ?></span>
+					<span>&bull;</span>
+					<span>⏱️ <?php echo esc_html( $read_time ); ?></span>
 				</div>
 
 				<?php if ( ! empty( $kicker ) ) : ?>
