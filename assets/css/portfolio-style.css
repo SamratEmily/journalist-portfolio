@@ -1,0 +1,656 @@
+/* ==========================================================================
+   JOURNALIST PORTFOLIO HUB - STYLESHEET
+   ========================================================================== */
+
+:root {
+    --jp-primary: #0f172a;
+    --jp-primary-light: #1e293b;
+    --jp-accent: #059669;
+    --jp-accent-hover: #047857;
+    --jp-accent-light: #ecfdf5;
+    --jp-text-main: #334155;
+    --jp-text-dark: #0f172a;
+    --jp-text-muted: #64748b;
+    --jp-bg-body: #f8fafc;
+    --jp-bg-card: #ffffff;
+    --jp-border-color: #e2e8f0;
+    --jp-font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --jp-font-serif: 'Merriweather', Georgia, serif;
+    --jp-radius: 12px;
+    --jp-shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+    --jp-shadow-md: 0 4px 14px rgba(15,23,42,0.08);
+    --jp-shadow-lg: 0 10px 30px rgba(15,23,42,0.12);
+    --jp-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.jp-portfolio-active {
+    margin: 0;
+    padding: 0;
+    font-family: var(--jp-font-sans);
+    background-color: var(--jp-bg-body);
+    color: var(--jp-text-main);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+.jp-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* ==========================================================================
+   NAVIGATION BAR & HEADER
+   ========================================================================== */
+
+.jp-header {
+    background: #ffffff;
+    border-bottom: 1px solid var(--jp-border-color);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: var(--jp-shadow-sm);
+}
+
+.jp-navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 80px;
+    gap: 20px;
+}
+
+.jp-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: var(--jp-text-dark);
+}
+
+.jp-brand-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--jp-accent);
+}
+
+.jp-brand-title {
+    font-weight: 800;
+    font-size: 1.15rem;
+    letter-spacing: -0.02em;
+    color: var(--jp-text-dark);
+    margin: 0;
+}
+
+.jp-brand-subtitle {
+    font-size: 0.75rem;
+    color: var(--jp-text-muted);
+    font-weight: 500;
+    display: block;
+}
+
+.jp-nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.jp-nav-item a {
+    text-decoration: none;
+    color: var(--jp-text-main);
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: var(--jp-transition);
+    padding: 6px 0;
+    position: relative;
+}
+
+.jp-nav-item a:hover,
+.jp-nav-item.active a {
+    color: var(--jp-accent);
+}
+
+.jp-nav-item.active a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--jp-accent);
+    border-radius: 2px;
+}
+
+.jp-header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.jp-search-form {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.jp-search-input {
+    background: #f1f5f9;
+    border: 1px solid var(--jp-border-color);
+    border-radius: 20px;
+    padding: 8px 14px 8px 36px;
+    font-size: 0.875rem;
+    width: 160px;
+    transition: var(--jp-transition);
+    outline: none;
+}
+
+.jp-search-input:focus {
+    width: 210px;
+    background: #ffffff;
+    border-color: var(--jp-accent);
+    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
+}
+
+.jp-search-icon {
+    position: absolute;
+    left: 12px;
+    color: var(--jp-text-muted);
+    pointer-events: none;
+}
+
+.jp-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--jp-accent);
+    color: #ffffff !important;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: var(--jp-transition);
+    box-shadow: 0 2px 8px rgba(5, 150, 105, 0.25);
+}
+
+.jp-cta-btn:hover {
+    background: var(--jp-accent-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35);
+}
+
+/* ==========================================================================
+   HERO BANNER (HOME & ABOUT)
+   ========================================================================== */
+
+.jp-hero-section {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: #ffffff;
+    padding: 70px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.jp-hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 40px;
+    align-items: center;
+}
+
+.jp-hero-badge {
+    display: inline-block;
+    background: rgba(5, 150, 105, 0.2);
+    color: #34d399;
+    border: 1px solid rgba(52, 211, 153, 0.3);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+}
+
+.jp-hero-title {
+    font-size: 2.8rem;
+    font-weight: 800;
+    line-height: 1.15;
+    margin: 0 0 12px 0;
+    color: #ffffff;
+}
+
+.jp-hero-designation {
+    font-size: 1.25rem;
+    color: #94a3b8;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+.jp-hero-objective {
+    font-size: 1.1rem;
+    color: #cbd5e1;
+    line-height: 1.7;
+    margin-bottom: 28px;
+    max-width: 720px;
+    font-family: var(--jp-font-serif);
+    font-style: italic;
+    border-left: 3px solid var(--jp-accent);
+    padding-left: 16px;
+}
+
+.jp-hero-avatar-wrapper {
+    text-align: center;
+}
+
+.jp-hero-avatar {
+    width: 240px;
+    height: 240px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* ==========================================================================
+   FEATURED STORIES & GRID CARDS
+   ========================================================================== */
+
+.jp-section {
+    padding: 60px 0;
+}
+
+.jp-section-title {
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: var(--jp-text-dark);
+    margin: 0 0 8px 0;
+    letter-spacing: -0.02em;
+}
+
+.jp-section-subtitle {
+    font-size: 1rem;
+    color: var(--jp-text-muted);
+    margin: 0 0 36px 0;
+}
+
+.jp-stories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 30px;
+}
+
+.jp-story-card {
+    background: var(--jp-bg-card);
+    border: 1px solid var(--jp-border-color);
+    border-radius: var(--jp-radius);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: var(--jp-transition);
+    box-shadow: var(--jp-shadow-sm);
+}
+
+.jp-story-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--jp-shadow-lg);
+    border-color: #cbd5e1;
+}
+
+.jp-story-thumb-link {
+    display: block;
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: #1e293b;
+}
+
+.jp-story-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.jp-story-card:hover .jp-story-thumb {
+    transform: scale(1.05);
+}
+
+.jp-badge-featured {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: var(--jp-accent);
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.jp-story-content {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.jp-story-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.825rem;
+    color: var(--jp-text-muted);
+    margin-bottom: 10px;
+}
+
+.jp-story-category-tag {
+    background: var(--jp-accent-light);
+    color: var(--jp-accent);
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 12px;
+    text-decoration: none;
+}
+
+.jp-story-kicker {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--jp-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+}
+
+.jp-story-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.35;
+    margin: 0 0 12px 0;
+}
+
+.jp-story-title a {
+    color: var(--jp-text-dark);
+    text-decoration: none;
+    transition: var(--jp-transition);
+}
+
+.jp-story-title a:hover {
+    color: var(--jp-accent);
+}
+
+.jp-story-excerpt {
+    font-size: 0.95rem;
+    color: var(--jp-text-main);
+    line-height: 1.55;
+    margin-bottom: 20px;
+    flex-grow: 1;
+}
+
+.jp-read-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--jp-accent);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: var(--jp-transition);
+}
+
+.jp-read-more:hover {
+    color: var(--jp-accent-hover);
+    gap: 10px;
+}
+
+/* ==========================================================================
+   CATEGORY FILTER & PAGINATION
+   ========================================================================== */
+
+.jp-filter-bar {
+    background: #ffffff;
+    padding: 18px 24px;
+    border-radius: var(--jp-radius);
+    border: 1px solid var(--jp-border-color);
+    margin-bottom: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    box-shadow: var(--jp-shadow-sm);
+}
+
+.jp-filter-form {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.jp-filter-select {
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--jp-border-color);
+    background-color: #f8fafc;
+    color: var(--jp-text-dark);
+    font-weight: 500;
+    font-size: 0.925rem;
+    outline: none;
+    cursor: pointer;
+    transition: var(--jp-transition);
+}
+
+.jp-filter-select:focus {
+    border-color: var(--jp-accent);
+}
+
+.jp-pagination-wrapper {
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+}
+
+.jp-pagination {
+    display: flex;
+    gap: 8px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.jp-pagination .page-numbers {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 42px;
+    height: 42px;
+    padding: 0 14px;
+    border-radius: 8px;
+    background: #ffffff;
+    border: 1px solid var(--jp-border-color);
+    color: var(--jp-text-main);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: var(--jp-transition);
+}
+
+.jp-pagination .page-numbers:hover {
+    border-color: var(--jp-accent);
+    color: var(--jp-accent);
+    background: var(--jp-accent-light);
+}
+
+.jp-pagination .page-numbers.current {
+    background: var(--jp-accent);
+    color: #ffffff;
+    border-color: var(--jp-accent);
+}
+
+/* ==========================================================================
+   ABOUT PAGE TEMPLATE SPECIFIICS
+   ========================================================================== */
+
+.jp-about-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 50px;
+    margin: 50px 0;
+    background: #ffffff;
+    padding: 40px;
+    border-radius: var(--jp-radius);
+    border: 1px solid var(--jp-border-color);
+    box-shadow: var(--jp-shadow-md);
+}
+
+.jp-about-sidebar {
+    text-align: center;
+}
+
+.jp-about-image {
+    width: 100%;
+    max-width: 280px;
+    aspect-ratio: 1 / 1;
+    border-radius: 16px;
+    object-fit: cover;
+    border: 4px solid #f1f5f9;
+    box-shadow: var(--jp-shadow-md);
+    margin-bottom: 20px;
+}
+
+.jp-about-name {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--jp-text-dark);
+    margin: 0 0 6px 0;
+}
+
+.jp-about-designation {
+    font-size: 1rem;
+    color: var(--jp-accent);
+    font-weight: 600;
+}
+
+.jp-about-bio-content {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--jp-text-main);
+}
+
+.jp-about-bio-content p {
+    margin-bottom: 1.5em;
+}
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+
+.jp-footer {
+    background: var(--jp-primary);
+    color: #94a3b8;
+    padding: 50px 0 30px 0;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    margin-top: 80px;
+}
+
+.jp-footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 30px;
+    margin-bottom: 30px;
+}
+
+.jp-footer-copyright {
+    font-size: 0.875rem;
+    text-align: center;
+    color: #64748b;
+}
+
+/* ==========================================================================
+   DOWNLOADABLE ASSET BUTTONS (CV & MEDIA KIT)
+   ========================================================================== */
+
+.jp-download-btn,
+.footer-download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #1e293b;
+    color: #e2e8f0 !important;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: var(--jp-transition);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.jp-download-btn:hover,
+.footer-download-btn:hover {
+    background: #0f766e;
+    color: #ffffff !important;
+    border-color: #14b8a6;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3);
+}
+
+.jp-download-icon {
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.jp-download-btn:hover .jp-download-icon,
+.footer-download-btn:hover .jp-download-icon {
+    transform: translateY(1px);
+}
+
+.jp-footer-downloads {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN BREAKPOINTS
+   ========================================================================== */
+
+@media (max-width: 900px) {
+    .jp-hero-grid,
+    .jp-about-layout {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        text-align: center;
+    }
+
+    .jp-hero-objective {
+        margin: 0 auto 24px auto;
+    }
+
+    .jp-navbar {
+        flex-wrap: wrap;
+        height: auto;
+        padding: 16px 0;
+    }
+
+    .jp-nav-menu {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        margin-top: 12px;
+    }
+
+    .jp-stories-grid {
+        grid-template-columns: 1fr;
+    }
+}

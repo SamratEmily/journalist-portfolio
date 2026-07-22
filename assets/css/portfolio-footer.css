@@ -1,0 +1,282 @@
+/* ==========================================================================
+   JOURNALIST PORTFOLIO HUB - 4-COLUMN FOOTER MATCHING SPEC
+   ========================================================================== */
+
+.jp-portfolio-footer {
+    background-color: #16171b;
+    color: #e5e7eb;
+    padding: 60px 0 24px 0;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.jp-footer-container {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.jp-footer-grid {
+    display: grid;
+    grid-template-columns: 1.25fr 1.35fr 1.4fr 1fr;
+    gap: 0;
+    margin-bottom: 40px;
+}
+
+.jp-footer-col {
+    padding: 0 28px;
+}
+
+.jp-footer-col:first-child {
+    padding-left: 0;
+}
+
+.jp-footer-col:last-child {
+    padding-right: 0;
+    border-right: none;
+}
+
+.jp-footer-col:not(:last-child) {
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.jp-footer-col-title {
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0 0 18px 0;
+    letter-spacing: -0.01em;
+}
+
+/* Column 1: Contact Details */
+.jp-footer-col1-desc {
+    color: #9ca3af;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    margin: 0 0 20px 0;
+    max-width: 260px;
+}
+
+.jp-footer-contact-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.jp-footer-contact-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.875rem;
+    color: #e5e7eb;
+}
+
+.jp-footer-contact-item a {
+    color: #e5e7eb;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.jp-footer-contact-item a:hover {
+    color: #ffffff;
+}
+
+.jp-footer-icon-wrap {
+    color: #9ca3af;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* Column 2: Social Links (2-Column Grid with Round Icons) */
+.jp-footer-social-grid-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 16px;
+}
+
+.jp-social-item-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #e5e7eb;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.jp-social-item-link:hover {
+    color: #ffffff;
+    transform: translateX(2px);
+}
+
+.jp-social-badge-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    flex-shrink: 0;
+    font-size: 13px;
+}
+
+/* Brand Icon Colors */
+.jp-icon-twitter {
+    background: #27272a;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.jp-icon-facebook {
+    background: #1877f2;
+}
+
+.jp-icon-linkedin {
+    background: #0a66c2;
+}
+
+.jp-icon-youtube {
+    background: #ff0000;
+}
+
+.jp-icon-instagram {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+}
+
+.jp-icon-medium {
+    background: #000000;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.jp-icon-default {
+    background: #3f3f46;
+}
+
+/* Column 3: Quick Links (2-Column Subgrid) */
+.jp-footer-nav-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 20px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.jp-footer-nav-2col li a {
+    color: #cbd5e1;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 400;
+    transition: color 0.2s ease;
+    display: inline-block;
+}
+
+.jp-footer-nav-2col li a:hover {
+    color: #ffffff;
+}
+
+/* Column 4: Downloads List (Clean Document Icon + Label) */
+.jp-footer-download-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.jp-footer-download-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #e5e7eb;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.jp-footer-download-item:hover {
+    color: #ffffff;
+    transform: translateX(2px);
+}
+
+.jp-download-item-icon {
+    width: 24px;
+    height: 24px;
+    color: #9ca3af;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* Footer Bottom Bar */
+.jp-footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-size: 0.825rem;
+    color: #9ca3af;
+}
+
+.jp-footer-copyright {
+    color: #9ca3af;
+}
+
+.jp-footer-tagline {
+    color: #9ca3af;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .jp-footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px 0;
+    }
+
+    .jp-footer-col {
+        padding: 0 20px;
+    }
+
+    .jp-footer-col:nth-child(2n) {
+        border-right: none;
+        padding-right: 0;
+    }
+
+    .jp-footer-col:nth-child(2n+1) {
+        padding-left: 0;
+    }
+}
+
+@media (max-width: 640px) {
+    .jp-footer-grid {
+        grid-template-columns: 1fr;
+        gap: 28px 0;
+    }
+
+    .jp-footer-col {
+        padding: 0 !important;
+        border-right: none !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding-bottom: 24px !important;
+    }
+
+    .jp-footer-col:last-child {
+        border-bottom: none;
+        padding-bottom: 0 !important;
+    }
+
+    .jp-footer-bottom {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+}
