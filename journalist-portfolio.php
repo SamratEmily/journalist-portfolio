@@ -32,6 +32,7 @@ require_once JP_HUB_PLUGIN_DIR . 'includes/class-shortcodes.php';
 require_once JP_HUB_PLUGIN_DIR . 'includes/class-footer-manager.php';
 require_once JP_HUB_PLUGIN_DIR . 'includes/class-demo-seeder.php';
 require_once JP_HUB_PLUGIN_DIR . 'includes/class-contact-handler.php';
+require_once JP_HUB_PLUGIN_DIR . 'includes/class-search-handler.php';
 
 // Register Activation & Deactivation Hooks.
 register_activation_hook( __FILE__, array( 'JournalistPortfolio\Activator', 'activate' ) );
@@ -93,6 +94,9 @@ final class Journalist_Portfolio_Hub {
 
 		// Initialize Contact Handler (shortcode + AJAX).
 		\JournalistPortfolio\Contact_Handler::get_instance();
+
+		// Initialize Search Handler.
+		\JournalistPortfolio\Search_Handler::get_instance();
 	}
 }
 

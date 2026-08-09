@@ -72,8 +72,8 @@ class Template_Loader {
 			}
 		}
 
-		// Stories Archive / Page Routing.
-		if ( is_page( 'stories' ) || is_post_type_archive( 'story' ) || is_tax( 'story_category' ) ) {
+		// Stories Archive & Search Routing.
+		if ( is_search() || isset( $_GET['s'] ) || is_page( 'stories' ) || is_post_type_archive( 'story' ) || is_tax( 'story_category' ) ) {
 			$stories_template = JP_HUB_PLUGIN_DIR . 'templates/page-stories.php';
 			if ( file_exists( $stories_template ) ) {
 				return $stories_template;
@@ -119,7 +119,26 @@ class Template_Loader {
 		wp_enqueue_style( 'jp-portfolio-contact-style', JP_HUB_PLUGIN_URL . 'assets/css/portfolio-contact.css', array( 'jp-portfolio-style' ), JP_HUB_VERSION );
 		wp_enqueue_style( 'jp-portfolio-extra-style', JP_HUB_PLUGIN_URL . 'assets/css/portfolio-homepage-extra.css', array( 'jp-portfolio-style' ), JP_HUB_VERSION );
 		wp_enqueue_style( 'jp-portfolio-stats-style', JP_HUB_PLUGIN_URL . 'assets/css/portfolio-stats.css', array( 'jp-portfolio-style' ), JP_HUB_VERSION );
+		wp_enqueue_style( 'jp-search-ajax-style', JP_HUB_PLUGIN_URL . 'assets/css/search-ajax.css', array( 'jp-portfolio-style' ), JP_HUB_VERSION );
 
 		wp_enqueue_script( 'jp-multimedia-modal', JP_HUB_PLUGIN_URL . 'assets/js/multimedia-modal.js', array(), JP_HUB_VERSION, true );
+
+		// Enqueue Live AJAX Search Script.
+		wp_enqueue_script( 'jp-search-ajax', JP_HUB_PLUGIN_URL . 'assets/js/search-ajax.js', array(), JP_HUB_VERSION, true );
+		wp_localize_script(
+			'jp-search-ajax',
+			'jpSearchVars',
+			array(
+				'ajax_url'   => admin_url( 'admin-ajax.php' ),
+				'nonce'      => wp_create_nonce( 'jp_search_nonce' ),
+				'search_url' => home_url( '/' ),
+				'i18n'       => array(
+					'searching'       => __( 'Searching stories...', 'journalist-portfolio-hub' ),
+					'no_results'      => __( 'No stories found matching your query.', 'journalist-portfolio-hub' ),
+					'view_all'        => __( 'View all %d story results', 'journalist-portfolio-hub' ),
+					'press_esc'       => __( 'Press Esc to close', 'journalist-portfolio-hub' ),
+				),
+			)
+		);
 	}
 }

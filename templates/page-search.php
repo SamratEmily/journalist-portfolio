@@ -1,9 +1,9 @@
 <?php
 /**
- * Stories Page, Archive & Search Template for Journalist Portfolio Hub.
+ * Modern Story Search Results Template for Journalist Portfolio Hub.
  *
  * @package JournalistPortfolio
- * @version 1.4.0
+ * @since   1.4.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -12,49 +12,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require JP_HUB_PLUGIN_DIR . 'templates/header-nav.php';
 
-// Handle pagination.
-$paged = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : ( ( get_query_var( 'page' ) ) ? get_query_var( 'page' ) : 1 );
+global $wp_query;
 
-// Handle category, search & orderby filters.
-$selected_cat   = isset( $_GET['story_cat'] ) ? sanitize_text_field( wp_unslash( $_GET['story_cat'] ) ) : '';
-$search_keyword = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : '';
-$selected_ord   = isset( $_GET['orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'date_desc';
+$search_query = get_search_query();
+$paged        = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : ( ( get_query_var( 'page' ) ) ? get_query_var( 'page' ) : 1 );
 
-$stories_args = array(
-	'post_type'      => 'story',
-	'post_status'    => 'publish',
-	'posts_per_page' => 9,
-	'paged'          => $paged,
-);
+$selected_cat = isset( $_GET['story_cat'] ) ? sanitize_text_field( wp_unslash( $_GET['story_cat'] ) ) : '';
+$selected_ord = isset( $_GET['orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'date_desc';
 
-if ( 'title' === $selected_ord ) {
-	$stories_args['orderby'] = 'title';
-	$stories_args['order']   = 'ASC';
-} elseif ( 'date_asc' === $selected_ord ) {
-	$stories_args['orderby'] = 'date';
-	$stories_args['order']   = 'ASC';
-} else {
-	$stories_args['orderby'] = 'date';
-	$stories_args['order']   = 'DESC';
-}
-
-if ( ! empty( $selected_cat ) ) {
-	$stories_args['tax_query'] = array(
-		array(
-			'taxonomy' => 'story_category',
-			'field'    => 'slug',
-			'terms'    => $selected_cat,
-		),
-	);
-}
-
-if ( ! empty( $search_keyword ) ) {
-	$stories_args['s'] = $search_keyword;
-}
-
-$stories_query = new \WP_Query( $stories_args );
-
-// Fetch Taxonomy categories for dropdown filter.
+// Get categories for filter dropdown.
 $categories = get_terms(
 	array(
 		'taxonomy'   => 'story_category',
@@ -62,46 +28,49 @@ $categories = get_terms(
 	)
 );
 
-$found_count = (int) $stories_query->found_posts;
+$found_count = (int) $wp_query->found_posts;
 ?>
 
 <main class="jp-section jp-search-results-page">
 	<div class="jp-container">
 		
-		<!-- Page Header Banner -->
-		<div style="margin-bottom: 28px;">
-			<h1 class="jp-section-title" style="font-size: 2.4rem;">
-				<?php if ( ! empty( $search_keyword ) ) : ?>
-					<?php printf( esc_html__( 'Search Results for: "%s"', 'journalist-portfolio-hub' ), esc_html( $search_keyword ) ); ?>
-				<?php else : ?>
-					<?php esc_html_e( 'Stories & Investigations', 'journalist-portfolio-hub' ); ?>
-				<?php endif; ?>
-			</h1>
-			<p class="jp-section-subtitle">
-				<?php if ( ! empty( $search_keyword ) ) : ?>
+		<!-- Search Page Banner -->
+		<div class="jp-search-header-card">
+			<div class="jp-search-header-content">
+				<span class="jp-search-kicker-badge"><?php esc_html_e( 'Story Search', 'journalist-portfolio-hub' ); ?></span>
+				<h1 class="jp-search-title">
+					<?php if ( ! empty( $search_query ) ) : ?>
+						<?php printf( esc_html__( 'Search Results for: "%s"', 'journalist-portfolio-hub' ), esc_html( $search_query ) ); ?>
+					<?php else : ?>
+						<?php esc_html_e( 'Explore Stories & Investigations', 'journalist-portfolio-hub' ); ?>
+					<?php endif; ?>
+				</h1>
+				<p class="jp-search-subtitle">
 					<?php
-					printf(
-						/* translators: %1$d: count, %2$s: keyword */
-						esc_html__( 'Found %1$d published %2$s matching your query.', 'journalist-portfolio-hub' ),
-						$found_count,
-						_n( 'story', 'stories', $found_count, 'journalist-portfolio-hub' )
-					);
+					if ( ! empty( $search_query ) ) {
+						printf(
+							/* translators: %d: number of results, %s: query string */
+							esc_html__( 'Found %1$d published %2$s matching your query.', 'journalist-portfolio-hub' ),
+							$found_count,
+							_n( 'story', 'stories', $found_count, 'journalist-portfolio-hub' )
+						);
+					} else {
+						esc_html_e( 'Use the keyword search and category filters below to find specific investigations, field reports, and articles.', 'journalist-portfolio-hub' );
+					}
 					?>
-				<?php else : ?>
-					<?php esc_html_e( 'Explore published investigative stories, articles, and field reports.', 'journalist-portfolio-hub' ); ?>
-				<?php endif; ?>
-			</p>
+				</p>
+			</div>
 		</div>
 
-		<!-- Unified Filter & Search Controls Bar -->
+		<!-- Interactive Filter & Search Controls Bar -->
 		<div class="jp-search-filter-wrapper">
-			<form method="get" action="<?php echo esc_url( home_url( '/stories' ) ); ?>" class="jp-search-page-form">
+			<form method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>" class="jp-search-page-form">
 				<input type="hidden" name="post_type" value="story">
 
-				<!-- Keyword Input Box with Integrated Green Circular SVG Submit Button -->
+				<!-- Keyword Input -->
 				<div class="jp-search-input-wrapper jp-search-page-input-wrap">
-					<input type="search" name="s" class="jp-search-input jp-search-page-input" placeholder="<?php esc_attr_e( 'Search keywords, topics, outlets...', 'journalist-portfolio-hub' ); ?>" value="<?php echo esc_attr( $search_keyword ); ?>" autocomplete="off" />
-					<button type="button" class="jp-search-clear-btn" aria-label="<?php esc_attr_e( 'Clear search', 'journalist-portfolio-hub' ); ?>" style="<?php echo ! empty( $search_keyword ) ? 'display: flex;' : 'display: none;'; ?>">&times;</button>
+					<input type="search" name="s" class="jp-search-input jp-search-page-input" placeholder="<?php esc_attr_e( 'Search keywords, topics, outlets...', 'journalist-portfolio-hub' ); ?>" value="<?php echo esc_attr( $search_query ); ?>" autocomplete="off" />
+					<button type="button" class="jp-search-clear-btn" aria-label="<?php esc_attr_e( 'Clear search', 'journalist-portfolio-hub' ); ?>" style="<?php echo ! empty( $search_query ) ? 'display: flex;' : 'display: none;'; ?>">&times;</button>
 					<button type="submit" class="jp-search-submit-icon-btn" aria-label="<?php esc_attr_e( 'Search', 'journalist-portfolio-hub' ); ?>">
 						<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 							<circle cx="11" cy="11" r="8"></circle>
@@ -110,9 +79,9 @@ $found_count = (int) $stories_query->found_posts;
 					</button>
 				</div>
 
-				<!-- Category Filter Dropdown -->
+				<!-- Category Select -->
 				<div class="jp-filter-select-wrap">
-					<select id="story_cat_select" name="story_cat" class="jp-filter-select" onchange="this.form.submit()">
+					<select name="story_cat" class="jp-filter-select" onchange="this.form.submit()">
 						<option value=""><?php esc_html_e( 'All Categories', 'journalist-portfolio-hub' ); ?></option>
 						<?php if ( ! empty( $categories ) && ! is_wp_error( $categories ) ) : ?>
 							<?php foreach ( $categories as $cat ) : ?>
@@ -124,7 +93,7 @@ $found_count = (int) $stories_query->found_posts;
 					</select>
 				</div>
 
-				<!-- Orderby Dropdown -->
+				<!-- Sorting Select -->
 				<div class="jp-filter-select-wrap">
 					<select name="orderby" class="jp-filter-select" onchange="this.form.submit()">
 						<option value="date_desc" <?php selected( $selected_ord, 'date_desc' ); ?>><?php esc_html_e( 'Newest First', 'journalist-portfolio-hub' ); ?></option>
@@ -133,8 +102,7 @@ $found_count = (int) $stories_query->found_posts;
 					</select>
 				</div>
 
-				<!-- Reset Filters -->
-				<?php if ( ! empty( $search_keyword ) || ! empty( $selected_cat ) || 'date_desc' !== $selected_ord ) : ?>
+				<?php if ( ! empty( $search_query ) || ! empty( $selected_cat ) || 'date_desc' !== $selected_ord ) : ?>
 					<a href="<?php echo esc_url( home_url( '/stories' ) ); ?>" class="jp-search-reset-btn">
 						<?php esc_html_e( 'Reset Filters', 'journalist-portfolio-hub' ); ?>
 					</a>
@@ -142,7 +110,7 @@ $found_count = (int) $stories_query->found_posts;
 			</form>
 		</div>
 
-		<!-- Results Summary Meta Bar -->
+		<!-- Results Count Meta -->
 		<div class="jp-results-summary-bar">
 			<div class="jp-results-count-tag">
 				<?php printf( esc_html__( 'Showing %d %s', 'journalist-portfolio-hub' ), $found_count, _n( 'story', 'stories', $found_count, 'journalist-portfolio-hub' ) ); ?>
@@ -150,11 +118,11 @@ $found_count = (int) $stories_query->found_posts;
 		</div>
 
 		<!-- Stories Grid -->
-		<?php if ( $stories_query->have_posts() ) : ?>
+		<?php if ( have_posts() ) : ?>
 			<div class="jp-stories-grid">
 				<?php
-				while ( $stories_query->have_posts() ) :
-					$stories_query->the_post();
+				while ( have_posts() ) :
+					the_post();
 
 					$kicker        = get_post_meta( get_the_ID(), '_story_heading', true );
 					$publisher     = get_post_meta( get_the_ID(), '_story_publisher', true );
@@ -231,8 +199,8 @@ $found_count = (int) $stories_query->found_posts;
 				<div class="jp-pagination">
 					<?php
 					$add_args = array( 'post_type' => 'story' );
-					if ( ! empty( $search_keyword ) ) {
-						$add_args['s'] = $search_keyword;
+					if ( ! empty( $search_query ) ) {
+						$add_args['s'] = $search_query;
 					}
 					if ( ! empty( $selected_cat ) ) {
 						$add_args['story_cat'] = $selected_cat;
@@ -243,7 +211,7 @@ $found_count = (int) $stories_query->found_posts;
 
 					echo paginate_links(
 						array(
-							'total'     => $stories_query->max_num_pages,
+							'total'     => $wp_query->max_num_pages,
 							'current'   => $paged,
 							'format'    => '?paged=%#%',
 							'show_all'  => false,
@@ -260,7 +228,7 @@ $found_count = (int) $stories_query->found_posts;
 			<?php wp_reset_postdata(); ?>
 
 		<?php else : ?>
-			<!-- Empty State -->
+			<!-- Modern Empty State -->
 			<div class="jp-search-empty-card">
 				<div class="jp-empty-icon-wrap">
 					<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -272,8 +240,8 @@ $found_count = (int) $stories_query->found_posts;
 
 				<h3 class="jp-empty-title">
 					<?php
-					if ( ! empty( $search_keyword ) ) {
-						printf( esc_html__( 'No stories found for "%s"', 'journalist-portfolio-hub' ), esc_html( $search_keyword ) );
+					if ( ! empty( $search_query ) ) {
+						printf( esc_html__( 'No stories found for "%s"', 'journalist-portfolio-hub' ), esc_html( $search_query ) );
 					} else {
 						esc_html_e( 'No stories match your criteria', 'journalist-portfolio-hub' );
 					}

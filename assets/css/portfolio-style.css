@@ -138,19 +138,35 @@ body.jp-portfolio-active {
     align-items: center;
 }
 
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+	-webkit-appearance: none !important;
+	appearance: none !important;
+	display: none !important;
+}
+
+input[type="search"]::-ms-clear,
+input[type="search"]::-ms-reveal {
+	display: none !important;
+	width: 0 !important;
+	height: 0 !important;
+}
+
 .jp-search-input {
     background: #f1f5f9;
     border: 1px solid var(--jp-border-color);
-    border-radius: 20px;
-    padding: 8px 14px 8px 36px;
+    border-radius: 8px;
+    padding: 10px 60px 10px 14px;
     font-size: 0.875rem;
-    width: 160px;
+    width: 100%;
     transition: var(--jp-transition);
     outline: none;
 }
 
 .jp-search-input:focus {
-    width: 210px;
+    width: 100%;
     background: #ffffff;
     border-color: var(--jp-accent);
     box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
