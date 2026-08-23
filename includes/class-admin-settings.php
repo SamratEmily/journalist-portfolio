@@ -91,11 +91,21 @@ class Admin_Settings {
 			array( $this, 'render_awards_settings_page' )
 		);
 
-		// Submenu 4: Multimedia
+		// Submenu 4: Photos
 		add_submenu_page(
 			'journalist-portfolio-settings',
-			__( 'Multimedia', 'journalist-portfolio-hub' ),
-			__( 'Multimedia', 'journalist-portfolio-hub' ),
+			__( 'Photos', 'journalist-portfolio-hub' ),
+			__( 'Photos', 'journalist-portfolio-hub' ),
+			'manage_options',
+			'jp-photos-settings',
+			array( $this, 'render_photos_settings_page' )
+		);
+
+		// Submenu 5: Videos
+		add_submenu_page(
+			'journalist-portfolio-settings',
+			__( 'Videos', 'journalist-portfolio-hub' ),
+			__( 'Videos', 'journalist-portfolio-hub' ),
 			'manage_options',
 			'jp-multimedia-settings',
 			array( $this, 'render_multimedia_settings_page' )
@@ -908,7 +918,199 @@ class Admin_Settings {
 	}
 
 	/**
-	 * Render Submenu 5: Multimedia Page.
+	 * Render Submenu 4: Photos Page.
+	 */
+	public function render_photos_settings_page(): void {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		wp_enqueue_media();
+
+		// Handle Form Submissions (Add / Edit / Delete)
+		if ( isset( $_POST['jp_photos_admin_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['jp_photos_admin_nonce'] ) ), 'jp_save_photos_admin' ) ) {
+			if ( isset( $_POST['action'] ) && 'delete_photo' === $_POST['action'] && isset( $_POST['photo_id'] ) ) {
+				$del_id = absint( $_POST['photo_id'] );
+				wp_delete_post( $del_id, true );
+				echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Photo item deleted successfully.', 'journalist-portfolio-hub' ) . '</p></div>';
+			} elseif ( isset( $_POST['photo_title'] ) ) {
+				$photo_id      = isset( $_POST['photo_id'] ) ? absint( $_POST['photo_id'] ) : 0;
+				$title         = sanitize_text_field( wp_unslash( $_POST['photo_title'] ) );
+				$description   = sanitize_textarea_field( wp_unslash( $_POST['photo_description'] ?? '' ) );
+				$tags          = sanitize_text_field( wp_unslash( $_POST['photo_tags'] ?? '' ) );
+				$photo_image   = esc_url_raw( wp_unslash( $_POST['photo_image'] ?? '' ) );
+				$published_url = esc_url_raw( wp_unslash( $_POST['photo_published_url'] ?? '' ) );
+
+				if ( empty( $photo_image ) ) {
+					echo '<div class="notice notice-error is-dismissible"><p>' . esc_html__( 'Photo Image URL / Upload is a required field.', 'journalist-portfolio-hub' ) . '</p></div>';
+				} else {
+					$post_data = array(
+						'post_title'  => $title,
+						'post_status' => 'publish',
+						'post_type'   => 'jp_photo',
+					);
+
+					if ( $photo_id > 0 ) {
+						$post_data['ID'] = $photo_id;
+						$post_id         = wp_update_post( $post_data );
+					} else {
+						$post_id = wp_insert_post( $post_data );
+					}
+
+					if ( $post_id && ! is_wp_error( $post_id ) ) {
+						update_post_meta( $post_id, '_photo_description', $description );
+						update_post_meta( $post_id, '_photo_tags', $tags );
+						update_post_meta( $post_id, '_photo_image', $photo_image );
+						update_post_meta( $post_id, '_photo_published_url', $published_url );
+
+						echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Photo item saved successfully.', 'journalist-portfolio-hub' ) . '</p></div>';
+					}
+				}
+			}
+		}
+
+		// Edit Mode Check
+		$editing_photo = null;
+		if ( isset( $_GET['edit_photo'] ) ) {
+			$edit_id       = absint( $_GET['edit_photo'] );
+			$editing_photo = get_post( $edit_id );
+		}
+
+		// Fetch All Photos
+		$items = get_posts(
+			array(
+				'post_type'      => 'jp_photo',
+				'post_status'    => 'publish',
+				'posts_per_page' => -1,
+				'orderby'        => 'date',
+				'order'          => 'DESC',
+			)
+		);
+		?>
+		<div class="wrap jp-admin-wrap">
+			<div class="jp-admin-header" style="margin-bottom: 24px;">
+				<h1><?php esc_html_e( 'Photos Management', 'journalist-portfolio-hub' ); ?></h1>
+				<p><?php esc_html_e( 'Upload photos and manage titles, simple descriptions, tags, and published story links.', 'journalist-portfolio-hub' ); ?></p>
+			</div>
+
+			<div style="display: grid; grid-template-columns: 380px 1fr; gap: 30px;">
+				<!-- Add/Edit Form -->
+				<div class="jp-admin-card" style="background: #fff; padding: 24px; border-radius: 8px; border: 1px solid #ccd0d4;">
+					<h2><?php echo $editing_photo ? esc_html__( 'Edit Photo Item', 'journalist-portfolio-hub' ) : esc_html__( 'Add New Photo Item', 'journalist-portfolio-hub' ); ?></h2>
+					<form method="post">
+						<?php wp_nonce_field( 'jp_save_photos_admin', 'jp_photos_admin_nonce' ); ?>
+						<?php if ( $editing_photo ) : ?>
+							<input type="hidden" name="photo_id" value="<?php echo esc_attr( $editing_photo->ID ); ?>">
+						<?php endif; ?>
+
+						<p>
+							<label for="photo_title"><strong><?php esc_html_e( 'Photo Title:', 'journalist-portfolio-hub' ); ?> <span style="color: #e11d48;">*</span></strong></label><br>
+							<input type="text" id="photo_title" name="photo_title" required class="widefat" value="<?php echo $editing_photo ? esc_attr( $editing_photo->post_title ) : ''; ?>" placeholder="e.g., Fishermen at Sunset on the Meghna">
+						</p>
+
+						<p>
+							<label for="photo_published_url"><strong><?php esc_html_e( 'Published Link URL:', 'journalist-portfolio-hub' ); ?></strong></label><br>
+							<input type="url" id="photo_published_url" name="photo_published_url" class="widefat" value="<?php echo $editing_photo ? esc_attr( get_post_meta( $editing_photo->ID, '_photo_published_url', true ) ) : ''; ?>" placeholder="e.g., https://example.com/published-article">
+						</p>
+
+						<p>
+							<label for="photo_image"><strong><?php esc_html_e( 'Photo Image URL / Upload:', 'journalist-portfolio-hub' ); ?> <span style="color: #e11d48;">*</span></strong></label><br>
+							<div style="display: flex; gap: 8px; margin-top: 4px;">
+								<input type="text" id="photo_image" name="photo_image" required class="widefat jp-media-url" value="<?php echo $editing_photo ? esc_attr( get_post_meta( $editing_photo->ID, '_photo_image', true ) ) : ''; ?>" placeholder="https://...">
+								<button type="button" class="button jp-upload-btn"><?php esc_html_e( 'Upload', 'journalist-portfolio-hub' ); ?></button>
+							</div>
+							<div class="jp-thumb-preview-box" style="margin-top: 8px;">
+								<?php $curr_img = $editing_photo ? get_post_meta( $editing_photo->ID, '_photo_image', true ) : ''; ?>
+								<img class="jp-thumb-preview" src="<?php echo esc_url( $curr_img ); ?>" style="<?php echo empty( $curr_img ) ? 'display:none;' : ''; ?> max-width: 180px; max-height: 110px; border-radius: 4px; border: 1px solid #e2e8f0; object-fit: cover;" alt="Preview">
+							</div>
+						</p>
+
+						<p>
+							<label for="photo_tags"><strong><?php esc_html_e( 'Tags (comma-separated):', 'journalist-portfolio-hub' ); ?></strong></label><br>
+							<input type="text" id="photo_tags" name="photo_tags" class="widefat" value="<?php echo $editing_photo ? esc_attr( get_post_meta( $editing_photo->ID, '_photo_tags', true ) ) : ''; ?>" placeholder="e.g., Landscape, River Erosion, People">
+						</p>
+
+						<p>
+							<label for="photo_description"><strong><?php esc_html_e( 'Simple Description:', 'journalist-portfolio-hub' ); ?></strong></label><br>
+							<textarea id="photo_description" name="photo_description" rows="4" class="widefat" placeholder="Simple description of this photograph..."><?php echo $editing_photo ? esc_textarea( get_post_meta( $editing_photo->ID, '_photo_description', true ) ) : ''; ?></textarea>
+						</p>
+
+						<p style="margin-top: 20px; display: flex; gap: 10px;">
+							<button type="submit" class="button button-primary" style="background: #059669; border-color: #059669; color: #fff;"><?php echo $editing_photo ? esc_html__( 'Update Photo', 'journalist-portfolio-hub' ) : esc_html__( 'Add Photo Item', 'journalist-portfolio-hub' ); ?></button>
+							<?php if ( $editing_photo ) : ?>
+								<a href="<?php echo esc_url( admin_url( 'admin.php?page=jp-photos-settings' ) ); ?>" class="button button-secondary"><?php esc_html_e( 'Cancel Edit', 'journalist-portfolio-hub' ); ?></a>
+							<?php endif; ?>
+						</p>
+					</form>
+				</div>
+
+				<!-- Items List Table -->
+				<div class="jp-admin-card" style="background: #fff; padding: 24px; border-radius: 8px; border: 1px solid #ccd0d4;">
+					<h2><?php esc_html_e( 'All Uploaded Photos', 'journalist-portfolio-hub' ); ?></h2>
+					<?php if ( ! empty( $items ) ) : ?>
+						<table class="widefat striped">
+							<thead>
+								<tr>
+									<th style="width: 80px;"><?php esc_html_e( 'Photo', 'journalist-portfolio-hub' ); ?></th>
+									<th><?php esc_html_e( 'Title', 'journalist-portfolio-hub' ); ?></th>
+									<th><?php esc_html_e( 'Tags', 'journalist-portfolio-hub' ); ?></th>
+									<th><?php esc_html_e( 'Published Link', 'journalist-portfolio-hub' ); ?></th>
+									<th><?php esc_html_e( 'Description', 'journalist-portfolio-hub' ); ?></th>
+									<th style="width: 120px; text-align: center;"><?php esc_html_e( 'Actions', 'journalist-portfolio-hub' ); ?></th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php foreach ( $items as $item ) :
+									$tags_val      = get_post_meta( $item->ID, '_photo_tags', true );
+									$desc_val      = get_post_meta( $item->ID, '_photo_description', true );
+									$pub_url_val   = get_post_meta( $item->ID, '_photo_published_url', true );
+									$photo_img     = get_post_meta( $item->ID, '_photo_image', true );
+									if ( empty( $photo_img ) && has_post_thumbnail( $item->ID ) ) {
+										$photo_img = get_the_post_thumbnail_url( $item->ID, 'thumbnail' );
+									}
+									?>
+									<tr>
+										<td>
+											<?php if ( ! empty( $photo_img ) ) : ?>
+												<img src="<?php echo esc_url( $photo_img ); ?>" alt="" style="width: 65px; height: 45px; object-fit: cover; border-radius: 4px;">
+											<?php else : ?>
+												<div style="width: 65px; height: 45px; background: #e2e8f0; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 11px;">No img</div>
+											<?php endif; ?>
+										</td>
+										<td><strong><?php echo esc_html( $item->post_title ); ?></strong></td>
+										<td><?php echo esc_html( $tags_val ); ?></td>
+										<td>
+											<?php if ( ! empty( $pub_url_val ) ) : ?>
+												<a href="<?php echo esc_url( $pub_url_val ); ?>" target="_blank" rel="noopener noreferrer" style="color: #059669; font-weight: 600; text-decoration: underline; font-size: 0.85rem;">View Link ↗</a>
+											<?php else : ?>
+												<span style="color: #94a3b8;">—</span>
+											<?php endif; ?>
+										</td>
+										<td><?php echo esc_html( wp_trim_words( $desc_val, 10 ) ); ?></td>
+										<td style="text-align: center;">
+											<a href="<?php echo esc_url( admin_url( 'admin.php?page=jp-photos-settings&edit_photo=' . $item->ID ) ); ?>" class="button button-small"><?php esc_html_e( 'Edit', 'journalist-portfolio-hub' ); ?></a>
+											<form method="post" style="display: inline-block;" onsubmit="return confirm('Delete this photo item?');">
+												<?php wp_nonce_field( 'jp_save_photos_admin', 'jp_photos_admin_nonce' ); ?>
+												<input type="hidden" name="action" value="delete_photo">
+												<input type="hidden" name="photo_id" value="<?php echo esc_attr( $item->ID ); ?>">
+												<button type="submit" class="button button-small button-link-delete"><?php esc_html_e( 'Delete', 'journalist-portfolio-hub' ); ?></button>
+											</form>
+										</td>
+									</tr>
+								<?php endforeach; ?>
+							</tbody>
+						</table>
+					<?php else : ?>
+						<p style="color: #64748b;"><?php esc_html_e( 'No photos uploaded yet. Upload your first photo using the form on the left.', 'journalist-portfolio-hub' ); ?></p>
+					<?php endif; ?>
+				</div>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Render Submenu 5: Videos Page.
 	 */
 	public function render_multimedia_settings_page(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -981,14 +1183,14 @@ class Admin_Settings {
 		?>
 		<div class="wrap jp-admin-wrap">
 			<div class="jp-admin-header" style="margin-bottom: 24px;">
-				<h1><?php esc_html_e( 'Multimedia Management', 'journalist-portfolio-hub' ); ?></h1>
+				<h1><?php esc_html_e( 'Videos Management', 'journalist-portfolio-hub' ); ?></h1>
 				<p><?php esc_html_e( 'Add and manage videos, podcasts, photo essays, and data visualizations.', 'journalist-portfolio-hub' ); ?></p>
 			</div>
 
 			<div style="display: grid; grid-template-columns: 380px 1fr; gap: 30px;">
 				<!-- Add/Edit Form -->
 				<div class="jp-admin-card" style="background: #fff; padding: 24px; border-radius: 8px; border: 1px solid #ccd0d4;">
-					<h2><?php echo $editing_media ? esc_html__( 'Edit Multimedia Item', 'journalist-portfolio-hub' ) : esc_html__( 'Add New Multimedia Item', 'journalist-portfolio-hub' ); ?></h2>
+					<h2><?php echo $editing_media ? esc_html__( 'Edit Video Item', 'journalist-portfolio-hub' ) : esc_html__( 'Add New Video Item', 'journalist-portfolio-hub' ); ?></h2>
 					<form method="post">
 						<?php wp_nonce_field( 'jp_save_multimedia_admin', 'jp_multimedia_admin_nonce' ); ?>
 						<?php if ( $editing_media ) : ?>
@@ -1017,8 +1219,8 @@ class Admin_Settings {
 						</p>
 
 						<p>
-							<label for="media_youtube_url"><strong><?php esc_html_e( 'YouTube / Embed URL:', 'journalist-portfolio-hub' ); ?> <span style="color: #e11d48;">*</span></strong></label><br>
-							<input type="url" id="media_youtube_url" name="media_youtube_url" required class="widefat" value="<?php echo $editing_media ? esc_attr( get_post_meta( $editing_media->ID, '_media_youtube_url', true ) ) : ''; ?>" placeholder="https://www.youtube.com/watch?v=...">
+							<label for="media_youtube_url"><strong><?php esc_html_e( 'YouTube / Facebook / Video URL:', 'journalist-portfolio-hub' ); ?> <span style="color: #e11d48;">*</span></strong></label><br>
+							<input type="url" id="media_youtube_url" name="media_youtube_url" required class="widefat" value="<?php echo $editing_media ? esc_attr( get_post_meta( $editing_media->ID, '_media_youtube_url', true ) ) : ''; ?>" placeholder="https://www.youtube.com/watch?v=... or https://www.facebook.com/watch/?v=...">
 						</p>
 
 						<p>
@@ -1039,7 +1241,7 @@ class Admin_Settings {
 						</p>
 
 						<p style="margin-top: 20px; display: flex; gap: 10px;">
-							<button type="submit" class="button button-primary" style="background: #059669; border-color: #059669; color: #fff;"><?php echo $editing_media ? esc_html__( 'Update Item', 'journalist-portfolio-hub' ) : esc_html__( 'Add Multimedia Item', 'journalist-portfolio-hub' ); ?></button>
+							<button type="submit" class="button button-primary" style="background: #059669; border-color: #059669; color: #fff;"><?php echo $editing_media ? esc_html__( 'Update Item', 'journalist-portfolio-hub' ) : esc_html__( 'Add Video Item', 'journalist-portfolio-hub' ); ?></button>
 							<?php if ( $editing_media ) : ?>
 								<a href="<?php echo esc_url( admin_url( 'admin.php?page=jp-multimedia-settings' ) ); ?>" class="button button-secondary"><?php esc_html_e( 'Cancel Edit', 'journalist-portfolio-hub' ); ?></a>
 							<?php endif; ?>
@@ -1049,7 +1251,7 @@ class Admin_Settings {
 
 				<!-- Items List Table -->
 				<div class="jp-admin-card" style="background: #fff; padding: 24px; border-radius: 8px; border: 1px solid #ccd0d4;">
-					<h2><?php esc_html_e( 'All Multimedia Productions', 'journalist-portfolio-hub' ); ?></h2>
+					<h2><?php esc_html_e( 'All Video Productions', 'journalist-portfolio-hub' ); ?></h2>
 					<?php if ( ! empty( $items ) ) : ?>
 						<table class="widefat striped">
 							<thead>
@@ -1058,7 +1260,7 @@ class Admin_Settings {
 									<th><?php esc_html_e( 'Title', 'journalist-portfolio-hub' ); ?></th>
 									<th><?php esc_html_e( 'Type', 'journalist-portfolio-hub' ); ?></th>
 									<th><?php esc_html_e( 'Tags', 'journalist-portfolio-hub' ); ?></th>
-									<th><?php esc_html_e( 'YouTube URL', 'journalist-portfolio-hub' ); ?></th>
+									<th><?php esc_html_e( 'Video URL', 'journalist-portfolio-hub' ); ?></th>
 									<th style="width: 120px; text-align: center;"><?php esc_html_e( 'Actions', 'journalist-portfolio-hub' ); ?></th>
 								</tr>
 							</thead>

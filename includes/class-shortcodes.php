@@ -36,6 +36,8 @@ class Shortcodes {
 		add_shortcode( 'jp_cv_link', array( $this, 'render_cv_link' ) );
 		add_shortcode( 'jp_media_kit_link', array( $this, 'render_media_kit_link' ) );
 		add_shortcode( 'jp_awards_carousel', array( $this, 'render_awards_carousel' ) );
+		add_shortcode( 'jp_photos_section', array( $this, 'render_photos_section' ) );
+		add_shortcode( 'jp_videos_section', array( $this, 'render_multimedia_section' ) );
 		add_shortcode( 'jp_multimedia_section', array( $this, 'render_multimedia_section' ) );
 		add_shortcode( 'jp_about_brief_section', array( $this, 'render_about_brief_section' ) );
 		add_shortcode( 'jp_impact_stats', array( $this, 'render_impact_stats' ) );
@@ -227,6 +229,95 @@ class Shortcodes {
 	}
 
 	/**
+	 * Render Photos Homepage Section Shortcode [jp_photos_section]
+	 *
+	 * @param array|string $atts Shortcode attributes.
+	 * @return string HTML output.
+	 */
+	public function render_photos_section( $atts = array() ): string {
+		$items = get_posts(
+			array(
+				'post_type'      => 'jp_photo',
+				'post_status'    => 'publish',
+				'posts_per_page' => 3,
+				'orderby'        => 'date',
+				'order'          => 'DESC',
+			)
+		);
+
+		if ( empty( $items ) ) {
+			return '';
+		}
+
+		ob_start();
+		?>
+		<section class="jp-section jp-photos-section" style="padding-top: 50px; padding-bottom: 50px; background: #f8fafc;">
+			<div class="jp-container">
+				<div class="jp-photos-header-row">
+					<div class="jp-photos-title-wrap">
+						<span class="jp-section-kicker" style="font-size: 0.8rem; font-weight: 700; color: #059669; letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-bottom: 4px;"><?php esc_html_e( 'PHOTOJOURNALISM & VISUAL DISPATCHES', 'journalist-portfolio-hub' ); ?></span>
+						<h2 style="font-size: 1.75rem; font-weight: 800; color: #0f172a; margin: 0; letter-spacing: -0.02em;"><?php esc_html_e( 'PHOTOS', 'journalist-portfolio-hub' ); ?></h2>
+					</div>
+					<a href="<?php echo esc_url( home_url( '/photos' ) ); ?>" class="jp-read-more" style="font-size: 0.95rem; font-weight: 700;">
+						<?php esc_html_e( 'Explore All Photos', 'journalist-portfolio-hub' ); ?> &rarr;
+					</a>
+				</div>
+
+				<div class="jp-photos-grid">
+					<?php foreach ( $items as $item ) :
+						$tags      = get_post_meta( $item->ID, '_photo_tags', true );
+						$photo_url = get_post_meta( $item->ID, '_photo_image', true );
+						$desc      = get_post_meta( $item->ID, '_photo_description', true );
+						$pub_url   = get_post_meta( $item->ID, '_photo_published_url', true );
+
+						if ( empty( $photo_url ) && has_post_thumbnail( $item->ID ) ) {
+							$photo_url = get_the_post_thumbnail_url( $item->ID, 'large' );
+						}
+						if ( empty( $photo_url ) ) {
+							$photo_url = 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80';
+						}
+						?>
+						<article class="jp-photo-card" data-photo-url="<?php echo esc_url( $photo_url ); ?>" data-title="<?php echo esc_attr( $item->post_title ); ?>" data-desc="<?php echo esc_attr( $desc ); ?>" data-tags="<?php echo esc_attr( $tags ); ?>" data-published-url="<?php echo esc_url( $pub_url ); ?>">
+							<div class="jp-photo-thumb-wrap">
+								<img src="<?php echo esc_url( $photo_url ); ?>" alt="<?php echo esc_attr( $item->post_title ); ?>" class="jp-photo-thumb">
+								<div class="jp-photo-overlay">
+									<span class="jp-photo-view-btn" aria-label="<?php esc_attr_e( 'View Photo', 'journalist-portfolio-hub' ); ?>">
+										<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+									</span>
+								</div>
+							</div>
+							<div class="jp-photo-content">
+								<?php if ( ! empty( $tags ) ) : ?>
+									<div class="jp-photo-tags"><?php echo esc_html( $tags ); ?></div>
+								<?php endif; ?>
+								<h3 class="jp-photo-title">
+									<a href="<?php echo esc_url( home_url( '/photos' ) ); ?>" class="jp-photo-link">
+										<?php echo esc_html( $item->post_title ); ?>
+									</a>
+								</h3>
+								<?php if ( ! empty( $desc ) ) : ?>
+									<p class="jp-photo-desc"><?php echo esc_html( wp_trim_words( $desc, 14 ) ); ?></p>
+								<?php endif; ?>
+
+								<?php if ( ! empty( $pub_url ) ) : ?>
+									<div style="margin-top: 14px;">
+										<a href="<?php echo esc_url( $pub_url ); ?>" target="_blank" rel="noopener noreferrer" class="jp-photo-pub-btn" onclick="event.stopPropagation();">
+											<span><?php esc_html_e( 'View Publication', 'journalist-portfolio-hub' ); ?></span>
+											<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+										</a>
+									</div>
+								<?php endif; ?>
+							</div>
+						</article>
+					<?php endforeach; ?>
+				</div>
+			</div>
+		</section>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
 	 * Render Multimedia Homepage Section Shortcode [jp_multimedia_section]
 	 *
 	 * @param array|string $atts Shortcode attributes.
@@ -253,11 +344,11 @@ class Shortcodes {
 			<div class="jp-container">
 				<div class="jp-multimedia-header-row">
 					<div class="jp-multimedia-title-wrap">
-						<span class="jp-section-kicker" style="font-size: 0.8rem; font-weight: 700; color: #059669; letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-bottom: 4px;"><?php esc_html_e( 'VISUAL & AUDIO REPORTING', 'journalist-portfolio-hub' ); ?></span>
-						<h2 style="font-size: 1.75rem; font-weight: 800; color: #0f172a; margin: 0; letter-spacing: -0.02em;"><?php esc_html_e( 'MULTIMEDIA', 'journalist-portfolio-hub' ); ?></h2>
+						<span class="jp-section-kicker" style="font-size: 0.8rem; font-weight: 700; color: #059669; letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-bottom: 4px;"><?php esc_html_e( 'DOCUMENTARY & AUDIO REPORTING', 'journalist-portfolio-hub' ); ?></span>
+						<h2 style="font-size: 1.75rem; font-weight: 800; color: #0f172a; margin: 0; letter-spacing: -0.02em;"><?php esc_html_e( 'VIDEOS', 'journalist-portfolio-hub' ); ?></h2>
 					</div>
-					<a href="<?php echo esc_url( home_url( '/multimedia' ) ); ?>" class="jp-read-more" style="font-size: 0.95rem; font-weight: 700;">
-						<?php esc_html_e( 'View All', 'journalist-portfolio-hub' ); ?> &rarr;
+					<a href="<?php echo esc_url( home_url( '/videos' ) ); ?>" class="jp-read-more" style="font-size: 0.95rem; font-weight: 700;">
+						<?php esc_html_e( 'Explore All Videos', 'journalist-portfolio-hub' ); ?> &rarr;
 					</a>
 				</div>
 

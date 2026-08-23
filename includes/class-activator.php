@@ -18,6 +18,7 @@ class Activator {
 		CPT_Stories::register_post_type_and_taxonomy();
 		CPT_Awards::register_post_type();
 		CPT_Multimedia::register_post_type();
+		CPT_Photos::register_post_type();
 
 		// Auto-generate required pages.
 		self::create_required_pages();
@@ -52,6 +53,14 @@ class Activator {
 			'stories'    => array(
 				'title'   => 'Stories',
 				'content' => '<!-- Journalist Portfolio Stories -->',
+			),
+			'photos'     => array(
+				'title'   => 'Photos',
+				'content' => '<!-- Journalist Portfolio Photos -->',
+			),
+			'videos'     => array(
+				'title'   => 'Videos',
+				'content' => '<!-- Journalist Portfolio Videos -->',
 			),
 			'multimedia' => array(
 				'title'   => 'Multimedia',

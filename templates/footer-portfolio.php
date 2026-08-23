@@ -217,7 +217,8 @@ $tagline          = get_option( 'jp_footer_tagline', __( 'Built with passion for
 							<li><a href="<?php echo esc_url( home_url( '/home' ) ); ?>"><?php esc_html_e( 'Home', 'journalist-portfolio-hub' ); ?></a></li>
 							<li><a href="<?php echo esc_url( home_url( '/about' ) ); ?>"><?php esc_html_e( 'About', 'journalist-portfolio-hub' ); ?></a></li>
 							<li><a href="<?php echo esc_url( home_url( '/stories' ) ); ?>"><?php esc_html_e( 'Stories', 'journalist-portfolio-hub' ); ?></a></li>
-							<li><a href="<?php echo esc_url( home_url( '/multimedia' ) ); ?>"><?php esc_html_e( 'Multimedia', 'journalist-portfolio-hub' ); ?></a></li>
+							<li><a href="<?php echo esc_url( home_url( '/photos' ) ); ?>"><?php esc_html_e( 'Photos', 'journalist-portfolio-hub' ); ?></a></li>
+							<li><a href="<?php echo esc_url( home_url( '/videos' ) ); ?>"><?php esc_html_e( 'Videos', 'journalist-portfolio-hub' ); ?></a></li>
 							<li><a href="<?php echo esc_url( home_url( '/awards' ) ); ?>"><?php esc_html_e( 'Awards', 'journalist-portfolio-hub' ); ?></a></li>
 							<li><a href="<?php echo esc_url( home_url( '/contact' ) ); ?>"><?php esc_html_e( 'Contact', 'journalist-portfolio-hub' ); ?></a></li>
 						<?php endif; ?>

@@ -43,18 +43,18 @@ class CPT_Multimedia {
 	 */
 	public static function register_post_type(): void {
 		$labels = array(
-			'name'               => _x( 'Multimedia', 'post type general name', 'journalist-portfolio-hub' ),
-			'singular_name'      => _x( 'Multimedia Item', 'post type singular name', 'journalist-portfolio-hub' ),
-			'menu_name'          => __( 'Multimedia', 'journalist-portfolio-hub' ),
-			'add_new'            => __( 'Add New Item', 'journalist-portfolio-hub' ),
-			'add_new_item'       => __( 'Add New Multimedia Item', 'journalist-portfolio-hub' ),
-			'edit_item'          => __( 'Edit Multimedia Item', 'journalist-portfolio-hub' ),
-			'new_item'           => __( 'New Multimedia Item', 'journalist-portfolio-hub' ),
-			'all_items'          => __( 'All Multimedia', 'journalist-portfolio-hub' ),
-			'view_item'          => __( 'View Item', 'journalist-portfolio-hub' ),
-			'search_items'       => __( 'Search Multimedia', 'journalist-portfolio-hub' ),
-			'not_found'          => __( 'No multimedia items found', 'journalist-portfolio-hub' ),
-			'not_found_in_trash' => __( 'No multimedia items found in Trash', 'journalist-portfolio-hub' ),
+			'name'               => _x( 'Videos', 'post type general name', 'journalist-portfolio-hub' ),
+			'singular_name'      => _x( 'Video Item', 'post type singular name', 'journalist-portfolio-hub' ),
+			'menu_name'          => __( 'Videos', 'journalist-portfolio-hub' ),
+			'add_new'            => __( 'Add New Video', 'journalist-portfolio-hub' ),
+			'add_new_item'       => __( 'Add New Video Item', 'journalist-portfolio-hub' ),
+			'edit_item'          => __( 'Edit Video Item', 'journalist-portfolio-hub' ),
+			'new_item'           => __( 'New Video Item', 'journalist-portfolio-hub' ),
+			'all_items'          => __( 'All Videos', 'journalist-portfolio-hub' ),
+			'view_item'          => __( 'View Video Item', 'journalist-portfolio-hub' ),
+			'search_items'       => __( 'Search Videos', 'journalist-portfolio-hub' ),
+			'not_found'          => __( 'No video items found', 'journalist-portfolio-hub' ),
+			'not_found_in_trash' => __( 'No video items found in Trash', 'journalist-portfolio-hub' ),
 		);
 
 		$args = array(
@@ -127,8 +127,8 @@ class CPT_Multimedia {
 
 			<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 16px;">
 				<p>
-					<label for="jp_media_youtube_url"><strong><?php esc_html_e( 'YouTube / Video URL:', 'journalist-portfolio-hub' ); ?> <span style="color: #e11d48;">*</span></strong></label><br>
-					<input type="url" id="jp_media_youtube_url" name="media_youtube_url" required value="<?php echo esc_attr( $youtube_url ); ?>" class="widefat" placeholder="e.g., https://www.youtube.com/watch?v=XXXXX">
+					<label for="jp_media_youtube_url"><strong><?php esc_html_e( 'YouTube / Facebook / Video URL:', 'journalist-portfolio-hub' ); ?> <span style="color: #e11d48;">*</span></strong></label><br>
+					<input type="url" id="jp_media_youtube_url" name="media_youtube_url" required value="<?php echo esc_attr( $youtube_url ); ?>" class="widefat" placeholder="e.g., https://www.youtube.com/watch?v=... or https://www.facebook.com/watch/?v=...">
 				</p>
 
 				<p>

@@ -355,3 +355,350 @@
 		font-size: 1.75rem;
 	}
 }
+
+/* ── PHOTOS SECTION & GALLERY ────────────────────────────────────────────── */
+.jp-photos-section {
+	border-top: 1px solid var(--jp-border-color, #e2e8f0);
+}
+
+.jp-photos-header-row {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	margin-bottom: 32px;
+	padding-bottom: 16px;
+	border-bottom: 1px solid var(--jp-border-color, #e2e8f0);
+}
+
+.jp-photos-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 28px;
+}
+
+.jp-photo-card {
+	background: #ffffff;
+	border: 1px solid var(--jp-border-color, #e2e8f0);
+	border-radius: var(--jp-radius, 12px);
+	overflow: hidden;
+	transition: var(--jp-transition, all 0.25s cubic-bezier(0.4, 0, 0.2, 1));
+	display: flex;
+	flex-direction: column;
+	cursor: pointer;
+	box-shadow: var(--jp-shadow-sm, 0 1px 3px rgba(0,0,0,0.05));
+}
+
+.jp-photo-card:hover {
+	transform: translateY(-4px);
+	box-shadow: var(--jp-shadow-md, 0 8px 24px rgba(15,23,42,0.12));
+	border-color: rgba(5, 150, 105, 0.35);
+}
+
+.jp-photo-thumb-wrap {
+	position: relative;
+	width: 100%;
+	aspect-ratio: 4 / 3;
+	background: #0f172a;
+	overflow: hidden;
+}
+
+.jp-photo-thumb {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 0.4s ease;
+}
+
+.jp-photo-card:hover .jp-photo-thumb {
+	transform: scale(1.08);
+}
+
+.jp-photo-overlay {
+	position: absolute;
+	inset: 0;
+	background: rgba(15, 23, 42, 0.25);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	opacity: 0;
+	transition: all 0.3s ease;
+}
+
+.jp-photo-card:hover .jp-photo-overlay {
+	opacity: 1;
+	background: rgba(15, 23, 42, 0.45);
+}
+
+.jp-photo-view-btn {
+	width: 44px;
+	height: 44px;
+	border-radius: 50%;
+	background: #ffffff;
+	color: #059669;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+	transform: scale(0.85);
+	transition: transform 0.25s ease;
+}
+
+.jp-photo-card:hover .jp-photo-view-btn {
+	transform: scale(1);
+}
+
+.jp-photo-content {
+	padding: 18px 20px;
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+}
+
+.jp-photo-tags {
+	font-size: 0.75rem;
+	font-weight: 700;
+	color: #059669;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	margin-bottom: 6px;
+}
+
+.jp-photo-title {
+	font-size: 1.1rem;
+	font-weight: 700;
+	line-height: 1.35;
+	margin: 0 0 8px;
+	color: #0f172a;
+}
+
+.jp-photo-link {
+	color: inherit;
+	text-decoration: none;
+	transition: color 0.2s ease;
+}
+
+.jp-photo-card:hover .jp-photo-link,
+.jp-photo-link:hover {
+	color: #059669;
+}
+
+.jp-photo-desc {
+	font-size: 0.9rem;
+	color: #475569;
+	line-height: 1.5;
+	margin: 0;
+}
+
+/* ── PHOTO LIGHTBOX MODAL ────────────────────────────────────────────────── */
+.jp-photo-lightbox {
+	position: fixed;
+	inset: 0;
+	z-index: 99999;
+	background: rgba(15, 23, 42, 0.92);
+	backdrop-filter: blur(8px);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 24px;
+	opacity: 0;
+	visibility: hidden;
+	transition: all 0.3s ease;
+}
+
+.jp-photo-lightbox.active {
+	opacity: 1;
+	visibility: visible;
+}
+
+.jp-photo-lightbox-container {
+	position: relative;
+	max-width: 900px;
+	width: 100%;
+	background: #ffffff;
+	border-radius: 12px;
+	overflow: hidden;
+	box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+}
+
+.jp-photo-lightbox-close {
+	position: absolute;
+	top: 12px;
+	right: 16px;
+	background: rgba(15,23,42,0.6);
+	border: none;
+	color: #ffffff;
+	font-size: 28px;
+	cursor: pointer;
+	line-height: 1;
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 10;
+	transition: background 0.2s ease;
+}
+
+.jp-photo-lightbox-close:hover {
+	background: #059669;
+}
+
+.jp-photo-lightbox-body {
+	display: flex;
+	flex-direction: column;
+	max-height: 85vh;
+	overflow-y: auto;
+}
+
+.jp-photo-lightbox-img {
+	width: 100%;
+	max-height: 60vh;
+	object-fit: contain;
+	background: #090d16;
+}
+
+.jp-photo-lightbox-meta {
+	padding: 24px;
+}
+
+.jp-photo-lightbox-tags {
+	display: inline-block;
+	font-size: 0.75rem;
+	font-weight: 700;
+	color: #059669;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	background: #ecfdf5;
+	padding: 4px 10px;
+	border-radius: 20px;
+	margin-bottom: 8px;
+}
+
+.jp-photo-lightbox-title {
+	font-size: 1.35rem;
+	font-weight: 800;
+	color: #0f172a;
+	margin: 0 0 10px;
+}
+
+.jp-photo-lightbox-desc {
+	font-size: 0.95rem;
+	color: #475569;
+	line-height: 1.6;
+	margin: 0;
+}
+
+/* ── PAGINATION STYLES ─────────────────────────────────────────────────── */
+.jp-pagination-wrapper {
+	margin-top: 40px;
+	display: flex;
+	justify-content: center;
+}
+
+.jp-pagination {
+	display: inline-flex;
+	gap: 6px;
+	align-items: center;
+}
+
+.jp-pagination .page-numbers {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 40px;
+	height: 40px;
+	padding: 0 14px;
+	border-radius: 8px;
+	background: #ffffff;
+	border: 1px solid #cbd5e1;
+	color: #334155;
+	font-size: 0.95rem;
+	font-weight: 600;
+	text-decoration: none;
+	transition: all 0.2s ease;
+}
+
+.jp-pagination .page-numbers:hover {
+	border-color: #059669;
+	color: #059669;
+	background: #f0fdf4;
+}
+
+.jp-pagination .page-numbers.current {
+	background: #059669;
+	border-color: #059669;
+	color: #ffffff;
+}
+
+.jp-pagination .page-numbers.dots {
+	border: none;
+	background: transparent;
+	color: #94a3b8;
+}
+
+@media (max-width: 900px) {
+	.jp-photos-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media (max-width: 600px) {
+	.jp-photos-grid {
+		grid-template-columns: 1fr;
+	}
+	.jp-photos-header-row {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 12px;
+	}
+}
+
+/* ── PUBLISHED LINK BUTTON STYLES ─────────────────────────────────────── */
+.jp-photo-pub-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 6px 14px;
+	border-radius: 6px;
+	font-size: 0.825rem;
+	font-weight: 600;
+	color: #059669;
+	background: #ecfdf5;
+	border: 1px solid rgba(5, 150, 105, 0.25);
+	text-decoration: none;
+	transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.jp-photo-pub-btn:hover {
+	background: #059669;
+	color: #ffffff;
+	border-color: #059669;
+	box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+}
+
+.jp-photo-modal-pub-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 10px 22px;
+	border-radius: 8px;
+	font-size: 0.9rem;
+	font-weight: 700;
+	color: #ffffff;
+	background: #059669;
+	border: 1px solid #059669;
+	text-decoration: none;
+	box-shadow: 0 4px 14px rgba(5, 150, 105, 0.3);
+	transition: all 0.2s ease;
+}
+
+.jp-photo-modal-pub-btn:hover {
+	background: #047857;
+	border-color: #047857;
+	color: #ffffff;
+	transform: translateY(-2px);
+	box-shadow: 0 6px 18px rgba(4, 120, 87, 0.4);
+}
+
+

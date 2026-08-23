@@ -51,8 +51,11 @@ $current_page_slug = get_post_field( 'post_name', get_post() );
 				<li class="jp-nav-item <?php echo ( is_page( 'stories' ) || is_post_type_archive( 'story' ) || is_tax( 'story_category' ) || is_singular( 'story' ) ) ? 'active' : ''; ?>">
 					<a href="<?php echo esc_url( home_url( '/stories' ) ); ?>"><?php esc_html_e( 'Stories', 'journalist-portfolio-hub' ); ?></a>
 				</li>
-				<li class="jp-nav-item <?php echo is_page( 'multimedia' ) ? 'active' : ''; ?>">
-					<a href="<?php echo esc_url( home_url( '/multimedia' ) ); ?>"><?php esc_html_e( 'Multimedia', 'journalist-portfolio-hub' ); ?></a>
+				<li class="jp-nav-item <?php echo is_page( 'photos' ) ? 'active' : ''; ?>">
+					<a href="<?php echo esc_url( home_url( '/photos' ) ); ?>"><?php esc_html_e( 'Photos', 'journalist-portfolio-hub' ); ?></a>
+				</li>
+				<li class="jp-nav-item <?php echo ( is_page( 'videos' ) || is_page( 'multimedia' ) ) ? 'active' : ''; ?>">
+					<a href="<?php echo esc_url( home_url( '/videos' ) ); ?>"><?php esc_html_e( 'Videos', 'journalist-portfolio-hub' ); ?></a>
 				</li>
 				<li class="jp-nav-item <?php echo is_page( 'awards' ) ? 'active' : ''; ?>">
 					<a href="<?php echo esc_url( home_url( '/awards' ) ); ?>"><?php esc_html_e( 'Awards', 'journalist-portfolio-hub' ); ?></a>

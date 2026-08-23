@@ -31,8 +31,8 @@ $media_query = new \WP_Query( $media_args );
 		
 		<!-- Page Header -->
 		<div style="margin-bottom: 40px; border-bottom: 1px solid #e2e8f0; padding-bottom: 24px;">
-			<span style="font-size: 0.8rem; font-weight: 700; color: #059669; letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-bottom: 6px;"><?php esc_html_e( 'AUDIO & VISUAL JOURNALISM', 'journalist-portfolio-hub' ); ?></span>
-			<h1 style="font-size: 2.25rem; font-weight: 800; color: #0f172a; margin: 0 0 8px; font-family: var(--jp-font-serif, 'Merriweather', Georgia, serif);"><?php esc_html_e( 'Multimedia Gallery', 'journalist-portfolio-hub' ); ?></h1>
+			<span style="font-size: 0.8rem; font-weight: 700; color: #059669; letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-bottom: 6px;"><?php esc_html_e( 'DOCUMENTARY & AUDIO REPORTING', 'journalist-portfolio-hub' ); ?></span>
+			<h1 style="font-size: 2.25rem; font-weight: 800; color: #0f172a; margin: 0 0 8px; font-family: var(--jp-font-serif, 'Merriweather', Georgia, serif);"><?php esc_html_e( 'Videos Gallery', 'journalist-portfolio-hub' ); ?></h1>
 			<p style="color: #64748b; font-size: 1.05rem; max-width: 650px; margin: 0;"><?php esc_html_e( 'Documentary videos, investigative podcasts, photo essays, and data visualization projects.', 'journalist-portfolio-hub' ); ?></p>
 		</div>
 

@@ -1,6 +1,6 @@
 /**
- * Journalist Portfolio Hub — Multimedia Modal Lightbox
- * Version 1.3.0
+ * Journalist Portfolio Hub — Multimedia / Video Modal Lightbox
+ * Version 1.4.0 (Supports YouTube, Facebook, Vimeo)
  */
 (function() {
 	'use strict';
@@ -18,7 +18,7 @@
 			lightbox.innerHTML =
 				'<div class="jp-lightbox-container">' +
 					'<button type="button" class="jp-lightbox-close" aria-label="Close">&times;</button>' +
-					'<iframe class="jp-lightbox-iframe" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>' +
+					'<iframe class="jp-lightbox-iframe" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="true"></iframe>' +
 				'</div>';
 			document.body.appendChild(lightbox);
 		}
@@ -28,10 +28,28 @@
 
 		function getEmbedUrl(url) {
 			if (!url) return '';
-			var match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
-			if (match && match[1]) {
-				return 'https://www.youtube.com/embed/' + match[1] + '?autoplay=1&rel=0';
+			url = url.trim();
+
+			// 1. YouTube Match
+			var ytMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|shorts\/|watch\?.+&v=))([\w-]{11})/);
+			if (ytMatch && ytMatch[1]) {
+				return 'https://www.youtube.com/embed/' + ytMatch[1] + '?autoplay=1&rel=0';
 			}
+
+			// 2. Facebook Match
+			if (url.indexOf('facebook.com') !== -1 || url.indexOf('fb.watch') !== -1 || url.indexOf('fb.gg') !== -1) {
+				if (url.indexOf('facebook.com/plugins/video.php') !== -1) {
+					return url;
+				}
+				return 'https://www.facebook.com/plugins/video.php?href=' + encodeURIComponent(url) + '&show_text=0&autoplay=true';
+			}
+
+			// 3. Vimeo Match
+			var vimeoMatch = url.match(/vimeo\.com\/(?:video\/)?([0-9]+)/);
+			if (vimeoMatch && vimeoMatch[1]) {
+				return 'https://player.vimeo.com/video/' + vimeoMatch[1] + '?autoplay=1';
+			}
+
 			return url;
 		}
 
@@ -52,7 +70,7 @@
 		cards.forEach(function(card) {
 			card.addEventListener('click', function(e) {
 				var videoUrl = this.getAttribute('data-video-url');
-				if (videoUrl && (videoUrl.indexOf('youtube') !== -1 || videoUrl.indexOf('youtu.be') !== -1)) {
+				if (videoUrl) {
 					e.preventDefault();
 					openModal(videoUrl);
 				}

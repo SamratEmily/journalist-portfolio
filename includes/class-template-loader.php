@@ -96,8 +96,20 @@ class Template_Loader {
 			}
 		}
 
-		// Multimedia Page Routing.
-		if ( is_page( 'multimedia' ) ) {
+		// Photos Page Routing.
+		if ( is_page( 'photos' ) ) {
+			$photos_template = JP_HUB_PLUGIN_DIR . 'templates/page-photos.php';
+			if ( file_exists( $photos_template ) ) {
+				return $photos_template;
+			}
+		}
+
+		// Videos & Multimedia Page Routing.
+		if ( is_page( 'videos' ) || is_page( 'multimedia' ) ) {
+			$videos_template = JP_HUB_PLUGIN_DIR . 'templates/page-videos.php';
+			if ( file_exists( $videos_template ) ) {
+				return $videos_template;
+			}
 			$multimedia_template = JP_HUB_PLUGIN_DIR . 'templates/page-multimedia.php';
 			if ( file_exists( $multimedia_template ) ) {
 				return $multimedia_template;
@@ -122,6 +134,7 @@ class Template_Loader {
 		wp_enqueue_style( 'jp-search-ajax-style', JP_HUB_PLUGIN_URL . 'assets/css/search-ajax.css', array( 'jp-portfolio-style' ), JP_HUB_VERSION );
 
 		wp_enqueue_script( 'jp-multimedia-modal', JP_HUB_PLUGIN_URL . 'assets/js/multimedia-modal.js', array(), JP_HUB_VERSION, true );
+		wp_enqueue_script( 'jp-photo-modal', JP_HUB_PLUGIN_URL . 'assets/js/photo-modal.js', array(), JP_HUB_VERSION, true );
 
 		// Enqueue Live AJAX Search Script.
 		wp_enqueue_script( 'jp-search-ajax', JP_HUB_PLUGIN_URL . 'assets/js/search-ajax.js', array(), JP_HUB_VERSION, true );

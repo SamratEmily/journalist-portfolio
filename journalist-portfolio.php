@@ -3,7 +3,7 @@
  * Plugin Name:       Journalist Portfolio Hub
  * Plugin URI:        https://example.com/journalist-portfolio-hub
  * Description:       A complete, standalone journalist portfolio plugin with CPT Stories, downloadable portfolio assets (CV & Media Kit), admin-controlled 4-column footer, customizable profile settings, shortcodes, and frontend templates.
- * Version:           1.2.0
+ * Version:           1.2.1
  * Author:            Senior WordPress Developer
  * Text Domain:       journalist-portfolio-hub
  * Domain Path:       /languages
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define Plugin Constants.
-define( 'JP_HUB_VERSION', '1.2.0' );
+define( 'JP_HUB_VERSION', '1.2.1' );
 define( 'JP_HUB_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'JP_HUB_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'JP_HUB_PLUGIN_FILE', __FILE__ );
@@ -26,6 +26,7 @@ require_once JP_HUB_PLUGIN_DIR . 'includes/class-activator.php';
 require_once JP_HUB_PLUGIN_DIR . 'includes/class-cpt-stories.php';
 require_once JP_HUB_PLUGIN_DIR . 'includes/class-cpt-awards.php';
 require_once JP_HUB_PLUGIN_DIR . 'includes/class-cpt-multimedia.php';
+require_once JP_HUB_PLUGIN_DIR . 'includes/class-cpt-photos.php';
 require_once JP_HUB_PLUGIN_DIR . 'includes/class-admin-settings.php';
 require_once JP_HUB_PLUGIN_DIR . 'includes/class-template-loader.php';
 require_once JP_HUB_PLUGIN_DIR . 'includes/class-shortcodes.php';
@@ -77,6 +78,7 @@ final class Journalist_Portfolio_Hub {
 		\JournalistPortfolio\CPT_Stories::get_instance();
 		\JournalistPortfolio\CPT_Awards::get_instance();
 		\JournalistPortfolio\CPT_Multimedia::get_instance();
+		\JournalistPortfolio\CPT_Photos::get_instance();
 
 		// Initialize Admin Settings.
 		if ( is_admin() ) {
@@ -147,12 +149,30 @@ if ( ! function_exists( 'jp_render_footer' ) ) {
 	}
 }
 
+if ( ! function_exists( 'jp_render_photos' ) ) {
+	/**
+	 * Echo the Photos Homepage Section HTML output directly in PHP templates.
+	 */
+	function jp_render_photos(): void {
+		echo do_shortcode( '[jp_photos_section]' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	}
+}
+
+if ( ! function_exists( 'jp_render_videos' ) ) {
+	/**
+	 * Echo the Videos Homepage Section HTML output directly in PHP templates.
+	 */
+	function jp_render_videos(): void {
+		echo do_shortcode( '[jp_videos_section]' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	}
+}
+
 if ( ! function_exists( 'jp_render_multimedia' ) ) {
 	/**
-	 * Echo the Multimedia Homepage Section HTML output directly in PHP templates.
+	 * Echo the Multimedia / Videos Homepage Section HTML output directly in PHP templates.
 	 */
 	function jp_render_multimedia(): void {
-		echo do_shortcode( '[jp_multimedia_section]' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo do_shortcode( '[jp_videos_section]' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 }
 

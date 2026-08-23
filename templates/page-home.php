@@ -23,9 +23,14 @@ $featured_story_id = 0;
 ?>
 
 <?php if ( '1' === (string) $show_on_home ) : ?>
-<!-- Hero Section (Full Width Background Image with Transparent Content Overlay) -->
+<!-- Hero Section (Full Width Background Image with Transparent Content Overlay on Desktop; Mobile-Optimized Stacked Layout) -->
 <section class="jp-hero-section" style="<?php echo ! empty( $hero_cover_image ) ? 'background-image: url(' . esc_url( $hero_cover_image ) . ');' : ''; ?>">
 	<div class="jp-hero-overlay"></div>
+	<?php if ( ! empty( $hero_cover_image ) ) : ?>
+		<div class="jp-hero-mobile-image-wrap">
+			<img src="<?php echo esc_url( $hero_cover_image ); ?>" alt="<?php echo esc_attr( $full_name ); ?>" class="jp-hero-mobile-image">
+		</div>
+	<?php endif; ?>
 	<div class="jp-container jp-hero-container">
 		<div class="jp-hero-content">
 			<h1 class="jp-hero-title"><?php echo esc_html( $full_name ); ?></h1>
@@ -174,12 +179,12 @@ $featured_story_id = 0;
 <!-- 2. STORIES SECTION (Grid of remaining stories) -->
 <section class="jp-section" style="padding-top: 10px;">
 	<div class="jp-container">
-		<div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px;">
+		<div class="jp-section-header-wrap">
 			<div>
 				<h2 class="jp-section-title"><?php esc_html_e( 'Latest Stories', 'journalist-portfolio-hub' ); ?></h2>
 				<p class="jp-section-subtitle"><?php esc_html_e( 'Explore recent investigative reporting, features, and field dispatches.', 'journalist-portfolio-hub' ); ?></p>
 			</div>
-			<a href="<?php echo esc_url( home_url( '/stories' ) ); ?>" class="jp-read-more" style="font-size: 1rem; font-weight: 700;">
+			<a href="<?php echo esc_url( home_url( '/stories' ) ); ?>" class="jp-read-more jp-section-header-link">
 				<?php esc_html_e( 'View All Stories', 'journalist-portfolio-hub' ); ?> &rarr;
 			</a>
 		</div>
@@ -280,10 +285,13 @@ $featured_story_id = 0;
 <!-- 3. AWARDS & FELLOWSHIPS CAROUSEL SECTION -->
 <?php echo do_shortcode( '[jp_awards_carousel]' ); ?>
 
-<!-- 4. MULTIMEDIA SECTION (Rendered directly below Awards) -->
-<?php jp_render_multimedia(); ?>
+<!-- 4. PHOTOS SECTION (Rendered directly below Awards) -->
+<?php jp_render_photos(); ?>
 
-<!-- 5. BRIEF ABOUT ME SECTION (Rendered directly below Multimedia) -->
+<!-- 5. VIDEOS SECTION (Rendered directly below Photos) -->
+<?php jp_render_videos(); ?>
+
+<!-- 6. BRIEF ABOUT ME SECTION (Rendered directly below Videos) -->
 <?php jp_render_about_brief(); ?>
 
 <?php require JP_HUB_PLUGIN_DIR . 'templates/footer.php'; ?>
