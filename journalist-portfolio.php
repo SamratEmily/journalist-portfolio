@@ -3,8 +3,9 @@
  * Plugin Name:       Journalist Portfolio Hub
  * Plugin URI:        https://example.com/journalist-portfolio-hub
  * Description:       A complete, standalone journalist portfolio plugin with CPT Stories, downloadable portfolio assets (CV & Media Kit), admin-controlled 4-column footer, customizable profile settings, shortcodes, and frontend templates.
- * Version:           1.2.2
- * Author:            Senior WordPress Developer
+ * Version:           1.3.0
+ * Author:            MD. Samrat Hossen
+ * Author URI:        https://samrat-personal-portfolio.netlify.app/
  * Text Domain:       journalist-portfolio-hub
  * Domain Path:       /languages
  * Requires at least: 6.0
@@ -16,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define Plugin Constants.
-define( 'JP_HUB_VERSION', '1.2.2' );
+define( 'JP_HUB_VERSION', '1.3.0' );
 define( 'JP_HUB_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'JP_HUB_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'JP_HUB_PLUGIN_FILE', __FILE__ );

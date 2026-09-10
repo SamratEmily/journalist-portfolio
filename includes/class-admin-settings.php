@@ -157,6 +157,7 @@ class Admin_Settings {
 			'jp_profile_image'    => 'esc_url_raw',
 			'jp_hero_cover_image' => 'esc_url_raw',
 			'jp_show_on_home'     => array( $this, 'sanitize_checkbox' ),
+			'jp_hero_bg_bright'   => array( $this, 'sanitize_checkbox' ),
 			'jp_home_objective'   => 'wp_kses_post',
 		);
 
@@ -321,6 +322,7 @@ class Admin_Settings {
 		$bio_text         = get_option( 'jp_bio_text', '' );
 		$profile_image    = get_option( 'jp_profile_image', '' );
 		$show_on_home     = get_option( 'jp_show_on_home', '1' );
+		$hero_bg_bright   = get_option( 'jp_hero_bg_bright', '0' );
 		$home_objective   = get_option( 'jp_home_objective', '' );
 		?>
 		<div class="wrap jp-admin-wrap">
@@ -396,6 +398,16 @@ class Admin_Settings {
 							<input type="checkbox" id="jp_show_on_home" name="jp_show_on_home" value="1" <?php checked( $show_on_home, '1' ); ?>>
 							<?php esc_html_e( 'Show Profile & Hero Section on Home Page', 'journalist-portfolio-hub' ); ?>
 						</label>
+					</div>
+
+					<div class="jp-field-group">
+						<label for="jp_hero_bg_bright">
+							<input type="checkbox" id="jp_hero_bg_bright" name="jp_hero_bg_bright" value="1" <?php checked( $hero_bg_bright, '1' ); ?>>
+							<?php esc_html_e( 'Hero Section Background is Bright', 'journalist-portfolio-hub' ); ?>
+						</label>
+						<span class="description" style="font-size: 0.85em; color: #64748b; margin-top: 4px; display: block; margin-left: 24px;">
+							<?php esc_html_e( 'Check this if your Hero Cover Image has a bright/light background. The hero text will switch to dark contrast colors for readability.', 'journalist-portfolio-hub' ); ?>
+						</span>
 					</div>
 
 					<?php $hero_cover_image = get_option( 'jp_hero_cover_image', '' ); ?>

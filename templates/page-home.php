@@ -17,6 +17,7 @@ if ( empty( $hero_cover_image ) ) {
 	$hero_cover_image = $profile_image;
 }
 $show_on_home   = get_option( 'jp_show_on_home', '1' );
+$hero_bg_bright = get_option( 'jp_hero_bg_bright', '0' );
 $home_objective = get_option( 'jp_home_objective', 'Dedicated to uncovering in-depth human stories, global climate challenges, and investigative truth through rigorous reporting.' );
 
 $featured_story_id = 0;
@@ -24,7 +25,7 @@ $featured_story_id = 0;
 
 <?php if ( '1' === (string) $show_on_home ) : ?>
 <!-- Hero Section (Full Width Background Image with Transparent Content Overlay on Desktop; Mobile-Optimized Stacked Layout) -->
-<section class="jp-hero-section" style="<?php echo ! empty( $hero_cover_image ) ? 'background-image: url(' . esc_url( $hero_cover_image ) . ');' : ''; ?>">
+<section class="jp-hero-section<?php echo '1' === (string) $hero_bg_bright ? ' jp-hero-bright' : ''; ?>" style="<?php echo ! empty( $hero_cover_image ) ? 'background-image: url(' . esc_url( $hero_cover_image ) . ');' : ''; ?>">
 	<div class="jp-hero-overlay"></div>
 	<?php if ( ! empty( $hero_cover_image ) ) : ?>
 		<div class="jp-hero-mobile-image-wrap">
@@ -47,8 +48,9 @@ $featured_story_id = 0;
 					<span><?php esc_html_e( 'Explore Stories', 'journalist-portfolio-hub' ); ?></span>
 					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
 				</a>
-				<a href="<?php echo esc_url( home_url( '/about' ) ); ?>" class="jp-cta-btn jp-cta-btn-outline" style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.35); backdrop-filter: blur(6px); box-shadow: none; padding: 12px 28px; font-size: 1rem;">
+				<a href="<?php echo esc_url( home_url( '/about' ) ); ?>" class="jp-cta-btn jp-cta-btn-outline" style="padding: 12px 28px; font-size: 1rem;">
 					<span><?php esc_html_e( 'Read Full Bio', 'journalist-portfolio-hub' ); ?></span>
+					<!-- <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> -->
 				</a>
 			</div>
 		</div>
