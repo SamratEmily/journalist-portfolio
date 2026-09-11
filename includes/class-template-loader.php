@@ -35,6 +35,8 @@ class Template_Loader {
 	private function __construct() {
 		add_filter( 'template_include', array( $this, 'route_templates' ), 99 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_frontend_assets' ) );
+		add_filter( 'pre_get_document_title', 'jp_get_browser_tab_title', 999 );
+		add_filter( 'wp_title', 'jp_get_browser_tab_title', 999 );
 	}
 
 	/**

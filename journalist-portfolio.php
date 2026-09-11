@@ -195,3 +195,82 @@ if ( ! function_exists( 'jp_render_impact_stats' ) ) {
 	}
 }
 
+if ( ! function_exists( 'jp_get_browser_tab_title' ) ) {
+	/**
+	 * Get dynamic browser tab / document title.
+	 * Rules:
+	 * - Home page: "[Full Name]"
+	 * - Every other page: "[Full Name] | [Page Title]"
+	 *
+	 * @param string $default_title Optional incoming title from filters.
+	 * @return string Formatted page title.
+	 */
+	function jp_get_browser_tab_title( string $default_title = '' ): string {
+		$full_name = trim( (string) get_option( 'jp_full_name', '' ) );
+		if ( empty( $full_name ) ) {
+			$full_name = get_bloginfo( 'name' );
+		}
+
+		// 1. Home Page: return only Full Name.
+		if ( is_front_page() || is_page( 'home' ) || ( is_home() && ! is_paged() ) ) {
+			return $full_name;
+		}
+
+		// 2. Determine Page Title for all other pages.
+		$page_title = '';
+
+		if ( is_search() ) {
+			$search_query = get_search_query();
+			/* translators: %s: Search keyword */
+			$page_title = ! empty( $search_query )
+				? sprintf( __( 'Search Results for "%s"', 'journalist-portfolio-hub' ), $search_query )
+				: __( 'Search Results', 'journalist-portfolio-hub' );
+		} elseif ( is_404() ) {
+			$page_title = __( 'Page Not Found', 'journalist-portfolio-hub' );
+		} elseif ( is_singular( 'story' ) ) {
+			$page_title = single_post_title( '', false );
+		} elseif ( is_singular() ) {
+			$page_title = single_post_title( '', false );
+		} elseif ( is_page() ) {
+			$page_title = single_post_title( '', false );
+		} elseif ( is_post_type_archive( 'story' ) ) {
+			$page_title = __( 'Stories', 'journalist-portfolio-hub' );
+		} elseif ( is_post_type_archive() ) {
+			$page_title = post_type_archive_title( '', false );
+		} elseif ( is_tax() || is_category() || is_tag() ) {
+			$page_title = single_term_title( '', false );
+		} elseif ( is_author() ) {
+			$author     = get_queried_object();
+			$page_title = ( $author && isset( $author->display_name ) ) ? $author->display_name : __( 'Author', 'journalist-portfolio-hub' );
+		} elseif ( is_archive() ) {
+			$page_title = __( 'Archive', 'journalist-portfolio-hub' );
+		}
+
+		// Fallback if empty: inspect queried object.
+		if ( empty( $page_title ) ) {
+			$queried = get_queried_object();
+			if ( $queried instanceof \WP_Post ) {
+				$page_title = $queried->post_title;
+			} elseif ( $queried instanceof \WP_Term ) {
+				$page_title = $queried->name;
+			} elseif ( $queried instanceof \WP_Post_Type ) {
+				$page_title = $queried->labels->name;
+			}
+		}
+
+		// Fallback to incoming default title if available.
+		if ( empty( $page_title ) && ! empty( $default_title ) ) {
+			$page_title = trim( str_replace( array( '|', '-', '–', '—' ), '', $default_title ) );
+		}
+
+		$page_title = trim( wp_strip_all_tags( $page_title ) );
+
+		if ( ! empty( $page_title ) ) {
+			return $full_name . ' | ' . $page_title;
+		}
+
+		return $full_name;
+	}
+}
+
+
