@@ -251,7 +251,7 @@ class Shortcodes {
 
 		ob_start();
 		?>
-		<section class="jp-section jp-photos-section" style="padding-top: 50px; padding-bottom: 50px; background: #f8fafc;">
+		<section class="jp-section jp-photos-section" style="padding-top: 0px; padding-bottom: 50px; background: #f8fafc;">
 			<div class="jp-container">
 				<div class="jp-photos-header-row">
 					<div class="jp-photos-title-wrap">
@@ -340,7 +340,7 @@ class Shortcodes {
 
 		ob_start();
 		?>
-		<section class="jp-section jp-multimedia-section" style="padding-top: 50px; padding-bottom: 50px; background: #ffffff;">
+		<section class="jp-section jp-multimedia-section" style="padding-top: 0px; padding-bottom: 50px; background: #ffffff;">
 			<div class="jp-container">
 				<div class="jp-multimedia-header-row">
 					<div class="jp-multimedia-title-wrap">
@@ -420,7 +420,7 @@ class Shortcodes {
 
 		ob_start();
 		?>
-		<section class="jp-section jp-about-brief-section" style="padding-top: 60px; padding-bottom: 70px; background: #F9F9FB;">
+		<section class="jp-section jp-about-brief-section" style="padding-top: 0px; padding-bottom: 70px; background: #F9F9FB;">
 			<div class="jp-container">
 				<div class="jp-about-brief-grid">
 					<!-- Left Column: Profile Frame -->

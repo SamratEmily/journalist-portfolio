@@ -59,7 +59,7 @@ $featured_story_id = 0;
 <?php endif; ?>
 
 <!-- 1. FEATURED INVESTIGATION SECTION (Single Card Matching Screenshot) -->
-<section class="jp-section" style="padding-bottom: 30px;">
+<section class="jp-section" style="padding-bottom: 0px;">
 	<div class="jp-container">
 		<?php
 		// Query single highest priority featured story.

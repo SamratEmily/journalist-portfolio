@@ -25,7 +25,7 @@ $photos_args = array(
 $photos_query = new \WP_Query( $photos_args );
 ?>
 
-<div class="jp-section" style="padding-top: 40px; padding-bottom: 60px; background: #f8fafc;">
+<div class="jp-section" style="padding-top: 0px; padding-bottom: 60px; background: #f8fafc;">
 	<div class="jp-container">
 		
 		<!-- Page Header -->
