@@ -53,7 +53,16 @@ $photos_query = new \WP_Query( $photos_args );
 					?>
 					<article class="jp-photo-card" data-photo-url="<?php echo esc_url( $photo_url ); ?>" data-title="<?php echo esc_attr( get_the_title() ); ?>" data-desc="<?php echo esc_attr( $desc ); ?>" data-tags="<?php echo esc_attr( $tags ); ?>" data-published-url="<?php echo esc_url( $pub_url ); ?>">
 						<div class="jp-photo-thumb-wrap">
-							<img src="<?php echo esc_url( $photo_url ); ?>" alt="<?php echo esc_attr( get_the_title() ); ?>" class="jp-photo-thumb">
+							<?php
+							echo jp_get_image_tag( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped inside helper.
+								$photo_url,
+								array(
+									'alt'   => get_the_title(),
+									'class' => 'jp-photo-thumb',
+									'size'  => 'medium_large',
+								)
+							);
+							?>
 							<div class="jp-photo-overlay">
 								<span class="jp-photo-view-btn" aria-label="<?php esc_attr_e( 'View Photo', 'journalist-portfolio-hub' ); ?>">
 									<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>

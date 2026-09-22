@@ -30,7 +30,17 @@ $contact_location = get_option( 'jp_contact_location', get_option( 'jp_footer_co
 			<!-- Profile Sidebar Image & Info -->
 			<div class="jp-about-sidebar">
 				<?php if ( ! empty( $profile_image ) ) : ?>
-					<img src="<?php echo esc_url( $profile_image ); ?>" alt="<?php echo esc_attr( $full_name ); ?>" class="jp-about-image">
+					<?php
+					echo jp_get_image_tag( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped inside helper.
+						$profile_image,
+						array(
+							'alt'      => $full_name,
+							'class'    => 'jp-about-image',
+							'size'     => 'medium_large',
+							'priority' => true,
+						)
+					);
+					?>
 				<?php else : ?>
 					<div class="jp-about-image" style="background: #334155; display: flex; align-items: center; justify-content: center; color: #94a3b8;">
 						<span class="dashicons dashicons-admin-users" style="font-size: 80px; width: 80px; height: 80px;"></span>

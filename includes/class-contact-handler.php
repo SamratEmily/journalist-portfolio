@@ -72,6 +72,9 @@ class Contact_Handler {
 	public function render_contact_page( $atts = array() ): string {
 		// Flag consumed by page-contact.php to suppress <html> wrapper when shortcode-embedded.
 		$jp_contact_is_shortcode = true; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
+
+		wp_enqueue_style( 'jp-portfolio-contact-style' );
+
 		ob_start();
 		require JP_HUB_PLUGIN_DIR . 'templates/page-contact.php';
 		return ob_get_clean();

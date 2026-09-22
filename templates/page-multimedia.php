@@ -58,7 +58,16 @@ $media_query = new \WP_Query( $media_args );
 					?>
 					<article class="jp-multimedia-card" data-video-url="<?php echo esc_url( $youtube_url ); ?>" data-title="<?php echo esc_attr( get_the_title() ); ?>">
 						<div class="jp-multimedia-thumb-wrap">
-							<img src="<?php echo esc_url( $thumbnail ); ?>" alt="<?php echo esc_attr( get_the_title() ); ?>" class="jp-multimedia-thumb">
+							<?php
+							echo jp_get_image_tag( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped inside helper.
+								$thumbnail,
+								array(
+									'alt'   => get_the_title(),
+									'class' => 'jp-multimedia-thumb',
+									'size'  => 'medium_large',
+								)
+							);
+							?>
 							<div class="jp-multimedia-overlay">
 								<span class="jp-multimedia-play-btn" aria-label="<?php esc_attr_e( 'Play Media', 'journalist-portfolio-hub' ); ?>">
 									<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>

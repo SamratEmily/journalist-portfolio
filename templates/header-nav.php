@@ -34,7 +34,17 @@ $current_page_slug = get_post_field( 'post_name', get_post() );
 			<!-- Journalist Brand Logo / Name -->
 			<a href="<?php echo esc_url( $home_url ); ?>" class="jp-brand">
 				<?php if ( ! empty( $profile_image ) ) : ?>
-					<img src="<?php echo esc_url( $profile_image ); ?>" alt="<?php echo esc_attr( $full_name ); ?>" class="jp-brand-avatar">
+					<?php
+					echo jp_get_image_tag( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped inside helper.
+						$profile_image,
+						array(
+							'alt'   => $full_name,
+							'class' => 'jp-brand-avatar',
+							'size'  => 'thumbnail',
+							'lazy'  => false,
+						)
+					);
+					?>
 				<?php endif; ?>
 				<div>
 					<span class="jp-brand-title"><?php echo esc_html( $full_name ? $full_name : get_bloginfo( 'name' ) ); ?></span>

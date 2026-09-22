@@ -16,6 +16,17 @@ $hero_cover_image = get_option( 'jp_hero_cover_image', '' );
 if ( empty( $hero_cover_image ) ) {
 	$hero_cover_image = $profile_image;
 }
+// Desktop draws the hero as a CSS background, so pick a sized variant per
+// breakpoint rather than pushing the full size original at every screen.
+$hero_attachment_id = $hero_cover_image ? jp_get_attachment_id_from_url( $hero_cover_image ) : 0;
+$hero_bg_default    = $hero_cover_image;
+$hero_bg_wide       = $hero_cover_image;
+
+if ( $hero_attachment_id ) {
+	$hero_bg_default = wp_get_attachment_image_url( $hero_attachment_id, 'large' ) ?: $hero_cover_image;
+	$hero_bg_wide    = wp_get_attachment_image_url( $hero_attachment_id, '1536x1536' ) ?: $hero_bg_default;
+}
+
 $show_on_home   = get_option( 'jp_show_on_home', '1' );
 $hero_bg_bright = get_option( 'jp_hero_bg_bright', '0' );
 $home_objective = get_option( 'jp_home_objective', 'Dedicated to uncovering in-depth human stories, global climate challenges, and investigative truth through rigorous reporting.' );
@@ -25,11 +36,29 @@ $featured_story_id = 0;
 
 <?php if ( '1' === (string) $show_on_home ) : ?>
 <!-- Hero Section (Full Width Background Image with Transparent Content Overlay on Desktop; Mobile-Optimized Stacked Layout) -->
-<section class="jp-hero-section<?php echo '1' === (string) $hero_bg_bright ? ' jp-hero-bright' : ''; ?>" style="<?php echo ! empty( $hero_cover_image ) ? 'background-image: url(' . esc_url( $hero_cover_image ) . ');' : ''; ?>">
+<?php if ( ! empty( $hero_bg_default ) ) : ?>
+<style>
+.jp-hero-section { background-image: url('<?php echo esc_url( $hero_bg_default ); ?>'); }
+@media (min-width: 1200px) {
+	.jp-hero-section { background-image: url('<?php echo esc_url( $hero_bg_wide ); ?>'); }
+}
+</style>
+<?php endif; ?>
+<section class="jp-hero-section<?php echo '1' === (string) $hero_bg_bright ? ' jp-hero-bright' : ''; ?>">
 	<div class="jp-hero-overlay"></div>
 	<?php if ( ! empty( $hero_cover_image ) ) : ?>
 		<div class="jp-hero-mobile-image-wrap">
-			<img src="<?php echo esc_url( $hero_cover_image ); ?>" alt="<?php echo esc_attr( $full_name ); ?>" class="jp-hero-mobile-image">
+			<?php
+			echo jp_get_image_tag( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped inside helper.
+				$hero_cover_image,
+				array(
+					'alt'      => $full_name,
+					'class'    => 'jp-hero-mobile-image',
+					'size'     => 'large',
+					'priority' => true,
+				)
+			);
+			?>
 		</div>
 	<?php endif; ?>
 	<div class="jp-container jp-hero-container">
