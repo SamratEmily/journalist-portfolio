@@ -36,6 +36,9 @@ class Template_Loader {
 		add_filter( 'template_include', array( $this, 'route_templates' ), 99 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_frontend_assets' ) );
 		add_filter( 'wp_resource_hints', array( $this, 'add_resource_hints' ), 10, 2 );
+		add_filter( 'style_loader_tag', array( $this, 'defer_non_critical_styles' ), 10, 4 );
+		add_action( 'wp_head', array( $this, 'render_fallback_favicon' ), 5 );
+		add_action( 'wp_head', array( $this, 'render_meta_description' ), 4 );
 		add_filter( 'pre_get_document_title', 'jp_get_browser_tab_title', 999 );
 		add_filter( 'wp_title', 'jp_get_browser_tab_title', 999 );
 	}
@@ -132,12 +135,119 @@ class Template_Loader {
 	public function add_resource_hints( array $urls, string $relation_type ): array {
 		if ( 'preconnect' === $relation_type && wp_style_is( 'google-fonts-inter', 'enqueued' ) ) {
 			$urls[] = array(
+				'href'        => 'https://fonts.googleapis.com',
+				'crossorigin' => 'anonymous',
+			);
+			$urls[] = array(
 				'href'        => 'https://fonts.gstatic.com',
 				'crossorigin' => 'anonymous',
 			);
 		}
 
 		return $urls;
+	}
+
+	/**
+	 * Load decorative stylesheets without blocking the first paint.
+	 *
+	 * The webfont and icon-font stylesheets together delay rendering by roughly
+	 * two seconds while contributing nothing to layout. Fetching them as print
+	 * media and promoting them on load keeps them out of the critical path; the
+	 * noscript copy covers browsers with JavaScript turned off.
+	 *
+	 * @param string $tag    Full <link> tag.
+	 * @param string $handle Registered style handle.
+	 * @param string $href   Stylesheet URL.
+	 * @param string $media  Media attribute.
+	 * @return string Filtered tag.
+	 */
+	public function defer_non_critical_styles( string $tag, string $handle, string $href, string $media ): string {
+		$deferred = array( 'google-fonts-inter', 'dashicons' );
+
+		if ( ! in_array( $handle, $deferred, true ) || 'all' !== $media || is_admin() ) {
+			return $tag;
+		}
+
+		return sprintf(
+			'<link rel="stylesheet" id="%1$s-css" href="%2$s" media="print" onload="this.media=\'all\';this.onload=null;" />' . "\n" .
+			'<noscript><link rel="stylesheet" href="%2$s" /></noscript>' . "\n",
+			esc_attr( $handle ),
+			esc_url( $href )
+		);
+	}
+
+	/**
+	 * Output a meta description, which the plugin's own <head> never emitted.
+	 */
+	public function render_meta_description(): void {
+		$description = '';
+
+		if ( is_front_page() || is_page( 'home' ) ) {
+			$description = (string) get_option( 'jp_home_objective', '' );
+		} elseif ( is_singular() ) {
+			$post = get_post();
+			if ( $post instanceof \WP_Post ) {
+				$description = get_the_excerpt( $post );
+			}
+		}
+
+		// The plugin's own pages carry no excerpt and the tagline is often blank,
+		// so fall back through the profile copy before giving up.
+		foreach ( array( 'jp_bio_text', 'jp_home_objective', 'jp_designation' ) as $option ) {
+			if ( ! empty( $description ) ) {
+				break;
+			}
+			$description = (string) get_option( $option, '' );
+		}
+
+		if ( empty( $description ) ) {
+			$description = (string) get_bloginfo( 'description' );
+		}
+
+		$description = trim( wp_strip_all_tags( strip_shortcodes( $description ) ) );
+
+		if ( empty( $description ) ) {
+			return;
+		}
+
+		printf(
+			'<meta name="description" content="%s" />' . "\n",
+			esc_attr( wp_html_excerpt( $description, 155, '…' ) )
+		);
+	}
+
+	/**
+	 * Emit a favicon built from the profile image when no Site Icon is set.
+	 *
+	 * With no icon declared the browser falls back to requesting /favicon.ico,
+	 * which WordPress answers with a 404 and Chrome logs as a console error. An
+	 * explicitly configured Site Icon always wins.
+	 */
+	public function render_fallback_favicon(): void {
+		if ( has_site_icon() ) {
+			return;
+		}
+
+		$profile_image = (string) get_option( 'jp_profile_image', '' );
+		$attachment_id = $profile_image ? jp_get_attachment_id_from_url( $profile_image ) : 0;
+
+		if ( ! $attachment_id ) {
+			return;
+		}
+
+		$icon_url = wp_get_attachment_image_url( $attachment_id, 'thumbnail' );
+
+		if ( ! $icon_url ) {
+			return;
+		}
+
+		printf( '<link rel="icon" href="%s" />' . "\n", esc_url( $icon_url ) );
+
+		$touch_icon_url = wp_get_attachment_image_url( $attachment_id, 'medium' );
+
+		if ( $touch_icon_url ) {
+			printf( '<link rel="apple-touch-icon" href="%s" />' . "\n", esc_url( $touch_icon_url ) );
+		}
 	}
 
 	/**

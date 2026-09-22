@@ -92,7 +92,7 @@
 }
 
 .jp-multimedia-card:hover .jp-multimedia-play-btn {
-	background: var(--jp-accent, #059669);
+	background: var(--jp-accent, #047857);
 	color: #ffffff;
 	transform: scale(1.15);
 	box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
@@ -103,7 +103,7 @@
 	position: absolute;
 	top: 12px;
 	left: 12px;
-	background: var(--jp-accent, #059669);
+	background: var(--jp-accent, #047857);
 	color: #ffffff;
 	font-size: 0.72rem;
 	font-weight: 700;
@@ -147,7 +147,7 @@
 
 .jp-multimedia-card:hover .jp-multimedia-link,
 .jp-multimedia-link:hover {
-	color: var(--jp-accent, #059669);
+	color: var(--jp-accent, #047857);
 }
 
 .jp-multimedia-desc {
@@ -210,7 +210,7 @@
 .jp-about-brief-kicker {
 	font-size: 0.8rem;
 	font-weight: 800;
-	color: var(--jp-accent, #059669);
+	color: var(--jp-accent, #047857);
 	letter-spacing: 0.1em;
 	text-transform: uppercase;
 	margin-bottom: 8px;
@@ -256,7 +256,7 @@
 }
 
 .jp-about-brief-btn:hover {
-	background: #059669;
+	background: #047857;
 	color: #ffffff !important;
 	transform: translateY(-2px);
 	box-shadow: 0 6px 18px rgba(5, 150, 105, 0.35);
@@ -438,7 +438,7 @@
 	height: 44px;
 	border-radius: 50%;
 	background: #ffffff;
-	color: #059669;
+	color: #047857;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -461,7 +461,7 @@
 .jp-photo-tags {
 	font-size: 0.75rem;
 	font-weight: 700;
-	color: #059669;
+	color: #047857;
 	text-transform: uppercase;
 	letter-spacing: 0.06em;
 	margin-bottom: 6px;
@@ -483,7 +483,7 @@
 
 .jp-photo-card:hover .jp-photo-link,
 .jp-photo-link:hover {
-	color: #059669;
+	color: #047857;
 }
 
 .jp-photo-desc {
@@ -545,7 +545,7 @@
 }
 
 .jp-photo-lightbox-close:hover {
-	background: #059669;
+	background: #047857;
 }
 
 .jp-photo-lightbox-body {
@@ -570,7 +570,7 @@
 	display: inline-block;
 	font-size: 0.75rem;
 	font-weight: 700;
-	color: #059669;
+	color: #047857;
 	text-transform: uppercase;
 	letter-spacing: 0.08em;
 	background: #ecfdf5;
@@ -624,14 +624,14 @@
 }
 
 .jp-pagination .page-numbers:hover {
-	border-color: #059669;
-	color: #059669;
+	border-color: #047857;
+	color: #047857;
 	background: #f0fdf4;
 }
 
 .jp-pagination .page-numbers.current {
-	background: #059669;
-	border-color: #059669;
+	background: #047857;
+	border-color: #047857;
 	color: #ffffff;
 }
 
@@ -668,7 +668,7 @@
 	border-radius: 6px;
 	font-size: 0.825rem;
 	font-weight: 600;
-	color: #059669;
+	color: #047857;
 	background: #ecfdf5;
 	border: 1px solid rgba(5, 150, 105, 0.25);
 	text-decoration: none;
@@ -676,9 +676,9 @@
 }
 
 .jp-photo-pub-btn:hover {
-	background: #059669;
+	background: #047857;
 	color: #ffffff;
-	border-color: #059669;
+	border-color: #047857;
 	box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
 }
 
@@ -691,8 +691,8 @@
 	font-size: 0.9rem;
 	font-weight: 700;
 	color: #ffffff;
-	background: #059669;
-	border: 1px solid #059669;
+	background: #047857;
+	border: 1px solid #047857;
 	text-decoration: none;
 	box-shadow: 0 4px 14px rgba(5, 150, 105, 0.3);
 	transition: all 0.2s ease;

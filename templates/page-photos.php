@@ -30,7 +30,7 @@ $photos_query = new \WP_Query( $photos_args );
 		
 		<!-- Page Header -->
 		<div style="margin-bottom: 40px; border-bottom: 1px solid #e2e8f0; padding-bottom: 24px;">
-			<span style="font-size: 0.8rem; font-weight: 700; color: #059669; letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-bottom: 6px;"><?php esc_html_e( 'VISUAL JOURNALISM & DISPATCHES', 'journalist-portfolio-hub' ); ?></span>
+			<span style="font-size: 0.8rem; font-weight: 700; color: #047857; letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-bottom: 6px;"><?php esc_html_e( 'VISUAL JOURNALISM & DISPATCHES', 'journalist-portfolio-hub' ); ?></span>
 			<h1 style="font-size: 2.25rem; font-weight: 800; color: #0f172a; margin: 0 0 8px; font-family: var(--jp-font-serif, 'Merriweather', Georgia, serif);"><?php esc_html_e( 'Photos Gallery', 'journalist-portfolio-hub' ); ?></h1>
 			<p style="color: #64748b; font-size: 1.05rem; max-width: 650px; margin: 0;"><?php esc_html_e( 'In-depth photojournalism essays, field photography dispatches, and human portraits.', 'journalist-portfolio-hub' ); ?></p>
 		</div>
@@ -64,7 +64,7 @@ $photos_query = new \WP_Query( $photos_args );
 							);
 							?>
 							<div class="jp-photo-overlay">
-								<span class="jp-photo-view-btn" aria-label="<?php esc_attr_e( 'View Photo', 'journalist-portfolio-hub' ); ?>">
+								<span class="jp-photo-view-btn" aria-hidden="true">
 									<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
 								</span>
 							</div>

@@ -268,7 +268,7 @@ class Shortcodes {
 			<div class="jp-container">
 				<div class="jp-photos-header-row">
 					<div class="jp-photos-title-wrap">
-						<span class="jp-section-kicker" style="font-size: 0.8rem; font-weight: 700; color: #059669; letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-bottom: 4px;"><?php esc_html_e( 'PHOTOJOURNALISM & VISUAL DISPATCHES', 'journalist-portfolio-hub' ); ?></span>
+						<span class="jp-section-kicker" style="font-size: 0.8rem; font-weight: 700; color: #047857; letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-bottom: 4px;"><?php esc_html_e( 'PHOTOJOURNALISM & VISUAL DISPATCHES', 'journalist-portfolio-hub' ); ?></span>
 						<h2 style="font-size: 1.75rem; font-weight: 800; color: #0f172a; margin: 0; letter-spacing: -0.02em;"><?php esc_html_e( 'PHOTOS', 'journalist-portfolio-hub' ); ?></h2>
 					</div>
 					<a href="<?php echo esc_url( home_url( '/photos' ) ); ?>" class="jp-read-more" style="font-size: 0.95rem; font-weight: 700;">
@@ -303,7 +303,7 @@ class Shortcodes {
 								);
 								?>
 								<div class="jp-photo-overlay">
-									<span class="jp-photo-view-btn" aria-label="<?php esc_attr_e( 'View Photo', 'journalist-portfolio-hub' ); ?>">
+									<span class="jp-photo-view-btn" aria-hidden="true">
 										<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
 									</span>
 								</div>
@@ -369,7 +369,7 @@ class Shortcodes {
 			<div class="jp-container">
 				<div class="jp-multimedia-header-row">
 					<div class="jp-multimedia-title-wrap">
-						<span class="jp-section-kicker" style="font-size: 0.8rem; font-weight: 700; color: #059669; letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-bottom: 4px;"><?php esc_html_e( 'DOCUMENTARY & AUDIO REPORTING', 'journalist-portfolio-hub' ); ?></span>
+						<span class="jp-section-kicker" style="font-size: 0.8rem; font-weight: 700; color: #047857; letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-bottom: 4px;"><?php esc_html_e( 'DOCUMENTARY & AUDIO REPORTING', 'journalist-portfolio-hub' ); ?></span>
 						<h2 style="font-size: 1.75rem; font-weight: 800; color: #0f172a; margin: 0; letter-spacing: -0.02em;"><?php esc_html_e( 'VIDEOS', 'journalist-portfolio-hub' ); ?></h2>
 					</div>
 					<a href="<?php echo esc_url( home_url( '/videos' ) ); ?>" class="jp-read-more" style="font-size: 0.95rem; font-weight: 700;">
@@ -408,7 +408,7 @@ class Shortcodes {
 								);
 								?>
 								<div class="jp-multimedia-overlay">
-									<span class="jp-multimedia-play-btn" aria-label="<?php esc_attr_e( 'Play Media', 'journalist-portfolio-hub' ); ?>">
+									<span class="jp-multimedia-play-btn" aria-hidden="true">
 										<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
 									</span>
 								</div>

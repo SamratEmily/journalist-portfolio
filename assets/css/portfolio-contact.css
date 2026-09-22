@@ -19,7 +19,7 @@
 .jp-contact-page-badge {
 	display: inline-block;
 	background: var(--jp-accent-light, #ecfdf5);
-	color: var(--jp-accent, #059669);
+	color: var(--jp-accent, #047857);
 	font-size: 0.8rem;
 	font-weight: 700;
 	letter-spacing: 0.09em;
@@ -85,7 +85,7 @@
 	height: 68px;
 	border-radius: 50%;
 	object-fit: cover;
-	border: 2px solid var(--jp-accent, #059669);
+	border: 2px solid var(--jp-accent, #047857);
 	flex-shrink: 0;
 }
 
@@ -155,7 +155,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	color: var(--jp-accent, #059669);
+	color: var(--jp-accent, #047857);
 	flex-shrink: 0;
 }
 
@@ -188,7 +188,7 @@
 }
 
 a.jp-contact-details-value:hover {
-	color: var(--jp-accent, #059669);
+	color: var(--jp-accent, #047857);
 }
 
 /* Social profiles */
@@ -233,8 +233,8 @@ a.jp-contact-details-value:hover {
 }
 
 .jp-contact-social-btn:hover {
-	background: var(--jp-accent, #059669);
-	border-color: var(--jp-accent, #059669);
+	background: var(--jp-accent, #047857);
+	border-color: var(--jp-accent, #047857);
 	color: #ffffff;
 	transform: translateY(-2px);
 	box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
@@ -427,14 +427,14 @@ a.jp-contact-details-value:hover {
 }
 
 .jp-contact-input:focus {
-	border-color: var(--jp-accent, #059669);
+	border-color: var(--jp-accent, #047857);
 	background: #ffffff;
 	box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
 }
 
 .jp-contact-input:focus + .jp-contact-field-icon,
 .jp-contact-input-wrap:focus-within .jp-contact-field-icon {
-	color: var(--jp-accent, #059669);
+	color: var(--jp-accent, #047857);
 }
 
 .jp-contact-textarea {
@@ -455,7 +455,7 @@ a.jp-contact-details-value:hover {
 }
 
 .jp-contact-textarea:focus {
-	border-color: var(--jp-accent, #059669);
+	border-color: var(--jp-accent, #047857);
 	background: #ffffff;
 	box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
 }

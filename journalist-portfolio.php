@@ -5,7 +5,7 @@
  * Description:       A complete, standalone journalist portfolio plugin with CPT Stories, downloadable portfolio assets (CV & Media Kit), admin-controlled 4-column footer, customizable profile settings, shortcodes, and frontend templates.
  * Version:           1.3.0
  * Author:            MD. Samrat Hossen
- * Author URI:        https://samrat-personal-portfolio.netlify.app/
+ * Author URI:        https://samratemily.netlify.app/
  * Text Domain:       journalist-portfolio-hub
  * Domain Path:       /languages
  * Requires at least: 6.0

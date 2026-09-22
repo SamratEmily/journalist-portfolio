@@ -51,7 +51,7 @@ input[type="search"]::-ms-reveal {
 .jp-search-page-input:focus {
 	width: 100% !important;
 	background: #ffffff !important;
-	border-color: var(--jp-accent, #059669) !important;
+	border-color: var(--jp-accent, #047857) !important;
 	box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15) !important;
 }
 
@@ -68,8 +68,8 @@ input[type="search"]::-ms-reveal {
 	max-height: 32px !important;
 	border-radius: 50% !important;
 	background: #ffffff !important;
-	border: 2px solid var(--jp-accent, #059669) !important;
-	color: var(--jp-accent, #059669) !important;
+	border: 2px solid var(--jp-accent, #047857) !important;
+	color: var(--jp-accent, #047857) !important;
 	display: flex !important;
 	align-items: center !important;
 	justify-content: center !important;
@@ -82,7 +82,7 @@ input[type="search"]::-ms-reveal {
 }
 
 .jp-search-submit-icon-btn:hover {
-	background: var(--jp-accent, #059669) !important;
+	background: var(--jp-accent, #047857) !important;
 	color: #ffffff !important;
 	transform: translateY(-50%) scale(1.05);
 	box-shadow: 0 4px 10px rgba(5, 150, 105, 0.3) !important;
@@ -91,7 +91,7 @@ input[type="search"]::-ms-reveal {
 .jp-search-submit-icon-btn svg {
 	width: 15px !important;
 	height: 15px !important;
-	stroke: var(--jp-accent, #059669) !important;
+	stroke: var(--jp-accent, #047857) !important;
 	stroke-width: 2.5 !important;
 	transition: stroke 0.2s ease !important;
 	display: block !important;
@@ -242,7 +242,7 @@ input[type="search"]::-ms-reveal {
 	display: block;
 	font-size: 0.73rem;
 	font-weight: 700;
-	color: var(--jp-accent, #059669);
+	color: var(--jp-accent, #047857);
 	text-transform: uppercase;
 	letter-spacing: 0.04em;
 	margin-bottom: 2px;
@@ -264,7 +264,7 @@ input[type="search"]::-ms-reveal {
 }
 
 .jp-live-item-link:hover .jp-live-item-title {
-	color: var(--jp-accent, #059669);
+	color: var(--jp-accent, #047857);
 }
 
 .jp-live-item-meta {
@@ -285,7 +285,7 @@ input[type="search"]::-ms-reveal {
 	text-decoration: none !important;
 	font-size: 0.85rem;
 	font-weight: 700;
-	color: var(--jp-accent, #059669) !important;
+	color: var(--jp-accent, #047857) !important;
 	border-top: 1px solid #e2e8f0;
 	transition: background 0.15s ease;
 }
@@ -310,7 +310,7 @@ input[type="search"]::-ms-reveal {
 	width: 18px;
 	height: 18px;
 	border: 2px solid #e2e8f0;
-	border-top-color: var(--jp-accent, #059669);
+	border-top-color: var(--jp-accent, #047857);
 	border-radius: 50%;
 	animation: jpSpin 0.7s linear infinite;
 }
@@ -413,7 +413,7 @@ input[type="search"]::-ms-reveal {
 
 .jp-search-page-input:focus {
 	background: #ffffff;
-	border-color: var(--jp-accent, #059669);
+	border-color: var(--jp-accent, #047857);
 	box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
 }
 
@@ -437,11 +437,11 @@ input[type="search"]::-ms-reveal {
 
 .jp-filter-select:focus {
 	background: #ffffff;
-	border-color: var(--jp-accent, #059669);
+	border-color: var(--jp-accent, #047857);
 }
 
 .jp-search-submit-btn {
-	background: var(--jp-accent, #059669);
+	background: var(--jp-accent, #047857);
 	color: #ffffff;
 	border: none;
 	padding: 10px 22px;
@@ -563,14 +563,14 @@ input[type="search"]::-ms-reveal {
 }
 
 .jp-cat-pill-link:hover {
-	background: var(--jp-accent, #059669);
+	background: var(--jp-accent, #047857);
 	color: #ffffff;
-	border-color: var(--jp-accent, #059669);
+	border-color: var(--jp-accent, #047857);
 }
 
 .jp-btn-primary-gradient {
 	display: inline-block;
-	background: var(--jp-accent, #059669);
+	background: var(--jp-accent, #047857);
 	color: #ffffff !important;
 	padding: 10px 24px;
 	border-radius: 30px;

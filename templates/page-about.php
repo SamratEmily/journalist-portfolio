@@ -54,21 +54,21 @@ $contact_location = get_option( 'jp_contact_location', get_option( 'jp_footer_co
 					<div style="margin-top: 24px; padding-top: 18px; border-top: 1px solid #e2e8f0; text-align: left; font-size: 0.9rem; color: #475569;">
 						<?php if ( ! empty( $contact_phone ) ) : ?>
 							<p style="margin: 0 0 8px 0; display: flex; align-items: center; gap: 8px;">
-								<span class="dashicons dashicons-phone" style="font-size: 16px; color: #059669;"></span>
+								<span class="dashicons dashicons-phone" style="font-size: 16px; color: #047857;"></span>
 								<a href="tel:<?php echo esc_attr( preg_replace( '/[^0-9+]/', '', $contact_phone ) ); ?>" style="color: inherit; text-decoration: none;"><?php echo esc_html( $contact_phone ); ?></a>
 							</p>
 						<?php endif; ?>
 
 						<?php if ( ! empty( $contact_email ) ) : ?>
 							<p style="margin: 0 0 8px 0; display: flex; align-items: center; gap: 8px;">
-								<span class="dashicons dashicons-email" style="font-size: 16px; color: #059669;"></span>
+								<span class="dashicons dashicons-email" style="font-size: 16px; color: #047857;"></span>
 								<a href="mailto:<?php echo esc_attr( $contact_email ); ?>" style="color: inherit; text-decoration: none;"><?php echo esc_html( $contact_email ); ?></a>
 							</p>
 						<?php endif; ?>
 
 						<?php if ( ! empty( $contact_location ) ) : ?>
 							<p style="margin: 0; display: flex; align-items: center; gap: 8px;">
-								<span class="dashicons dashicons-location" style="font-size: 16px; color: #059669;"></span>
+								<span class="dashicons dashicons-location" style="font-size: 16px; color: #047857;"></span>
 								<span><?php echo esc_html( $contact_location ); ?></span>
 							</p>
 						<?php endif; ?>

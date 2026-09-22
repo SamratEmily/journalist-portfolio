@@ -5,8 +5,8 @@
 :root {
     --jp-primary: #0f172a;
     --jp-primary-light: #1e293b;
-    --jp-accent: #059669;
-    --jp-accent-hover: #047857;
+    --jp-accent: #047857;
+    --jp-accent-hover: #065f46;
     --jp-accent-light: #ecfdf5;
     --jp-text-main: #334155;
     --jp-text-dark: #0f172a;
@@ -295,7 +295,7 @@ input[type="search"]::-ms-reveal {
     max-width: 760px;
     font-family: var(--jp-font-serif, 'Merriweather', Georgia, serif);
     font-style: italic;
-    border-left: 4px solid var(--jp-accent, #059669);
+    border-left: 4px solid var(--jp-accent, #047857);
     padding: 16px 20px;
     background: rgba(15, 23, 42, 0.45);
     backdrop-filter: blur(6px);
@@ -473,6 +473,15 @@ input[type="search"]::-ms-reveal {
 .jp-featured-card-horizontal:hover {
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
     border-color: #cbd5e1;
+}
+
+/* Muted grey only reaches 4.34:1 against this card's tinted background. */
+.jp-featured-card-horizontal .jp-featured-meta-info,
+.jp-featured-card-horizontal .jp-featured-meta-info a,
+.jp-featured-card-horizontal .jp-featured-meta-info strong,
+.jp-featured-card-horizontal .jp-featured-meta-info span,
+.jp-featured-card-horizontal .jp-featured-excerpt {
+    color: #475569;
 }
 
 .jp-featured-thumb-col {
@@ -993,13 +1002,13 @@ input[type="search"]::-ms-reveal {
 
     .jp-nav-item.active a {
         background: rgba(5, 150, 105, 0.12);
-        color: var(--jp-accent, #059669);
+        color: var(--jp-accent, #047857);
         font-weight: 700;
     }
 
     .jp-nav-item a:hover {
         background: rgba(241, 245, 249, 0.8);
-        color: var(--jp-accent, #059669);
+        color: var(--jp-accent, #047857);
     }
 
     .jp-stories-grid {
@@ -1132,7 +1141,7 @@ input[type="search"]::-ms-reveal {
         padding: 0 !important;
         overflow: hidden !important;
         background: #0f172a !important;
-        border-bottom: 3px solid var(--jp-accent, #059669);
+        border-bottom: 3px solid var(--jp-accent, #047857);
     }
 
     .jp-hero-mobile-image {
@@ -1184,7 +1193,7 @@ input[type="search"]::-ms-reveal {
         padding: 14px 16px !important;
         max-width: 100% !important;
         background: rgba(30, 41, 59, 0.75) !important;
-        border-left: 3px solid var(--jp-accent, #059669) !important;
+        border-left: 3px solid var(--jp-accent, #047857) !important;
         border-radius: 0 8px 8px 0 !important;
         box-sizing: border-box !important;
         text-align: left !important;

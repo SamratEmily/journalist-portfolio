@@ -143,7 +143,7 @@ $featured_story_id = 0;
 				$cat_str = ! empty( $cat_names ) ? implode( ', ', $cat_names ) : 'General';
 				?>
 				<article class="jp-featured-card-horizontal">
-					<a href="<?php the_permalink(); ?>" class="jp-featured-thumb-col">
+					<a href="<?php the_permalink(); ?>" class="jp-featured-thumb-col" aria-label="<?php echo esc_attr( get_the_title() ); ?>">
 						<?php if ( has_post_thumbnail() ) : ?>
 							<?php the_post_thumbnail( 'jp_featured_400_300', array( 'class' => 'jp-featured-thumb-img', 'width' => 400, 'height' => 300 ) ); ?>
 						<?php else : ?>
@@ -251,7 +251,7 @@ $featured_story_id = 0;
 					$cat_link    = ( ! empty( $categories ) && ! is_wp_error( $categories ) ) ? get_term_link( $categories[0] ) : '#';
 					?>
 					<article class="jp-story-card">
-						<a href="<?php the_permalink(); ?>" class="jp-story-thumb-link">
+						<a href="<?php the_permalink(); ?>" class="jp-story-thumb-link" aria-label="<?php echo esc_attr( get_the_title() ); ?>">
 							<?php if ( has_post_thumbnail() ) : ?>
 								<?php the_post_thumbnail( 'medium_large', array( 'class' => 'jp-story-thumb' ) ); ?>
 							<?php else : ?>

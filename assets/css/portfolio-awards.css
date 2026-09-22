@@ -1,6 +1,6 @@
 /**
  * Journalist Portfolio Hub - Awards & Fellowships Styles
- * Palette: #0f172a (Charcoal), #059669 (Emerald Green), #f8fafc (Light Gray)
+ * Palette: #0f172a (Charcoal), #047857 (Emerald Green), #f8fafc (Light Gray)
  */
 
 /* Main Awards Section Header */
@@ -49,9 +49,9 @@
 }
 
 .jp-slider-nav-btn:hover {
-    background: #059669;
+    background: #047857;
     color: #ffffff;
-    border-color: #059669;
+    border-color: #047857;
     box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
     transform: translateY(-1px);
 }
@@ -99,7 +99,7 @@
 .jp-awards-slider-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
-    border-color: #059669;
+    border-color: #047857;
 }
 
 /* Dedicated Awards Page Grid Layout (/awards) */
@@ -125,7 +125,7 @@
 .jp-award-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 12px 30px rgba(15, 23, 42, 0.09);
-    border-color: #059669;
+    border-color: #047857;
 }
 
 /* Card Header Elements */
@@ -141,7 +141,7 @@
     height: 48px;
     border-radius: 50%;
     background: #0f172a;
-    color: #059669;
+    color: #047857;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -180,7 +180,7 @@
 .jp-award-subtitle {
     font-size: 0.925rem;
     font-weight: 600;
-    color: #059669;
+    color: #047857;
     margin-bottom: 12px;
     display: block;
 }
