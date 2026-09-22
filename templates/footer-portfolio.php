@@ -102,7 +102,7 @@ $tagline          = get_option( 'jp_footer_tagline', __( 'Built with passion for
 			<!-- Column 1: Contact Details -->
 			<div class="jp-footer-col">
 				<?php if ( ! empty( $col1_title ) ) : ?>
-					<h4 class="jp-footer-col-title"><?php echo esc_html( $col1_title ); ?></h4>
+					<h3 class="jp-footer-col-title"><?php echo esc_html( $col1_title ); ?></h3>
 				<?php endif; ?>
 
 				<?php if ( ! empty( $col1_desc ) ) : ?>
@@ -142,7 +142,7 @@ $tagline          = get_option( 'jp_footer_tagline', __( 'Built with passion for
 			<!-- Column 2: Follow Me (2-Column Grid with Brand Icons & Names) -->
 			<div class="jp-footer-col">
 				<?php if ( ! empty( $col2_title ) ) : ?>
-					<h4 class="jp-footer-col-title"><?php echo esc_html( $col2_title ); ?></h4>
+					<h3 class="jp-footer-col-title"><?php echo esc_html( $col2_title ); ?></h3>
 				<?php endif; ?>
 
 				<?php if ( ! empty( $social_links ) ) : ?>
@@ -179,7 +179,7 @@ $tagline          = get_option( 'jp_footer_tagline', __( 'Built with passion for
 			<!-- Column 3: Quick Links (2-Column Subgrid) -->
 			<div class="jp-footer-col">
 				<?php if ( ! empty( $col3_title ) ) : ?>
-					<h4 class="jp-footer-col-title"><?php echo esc_html( $col3_title ); ?></h4>
+					<h3 class="jp-footer-col-title"><?php echo esc_html( $col3_title ); ?></h3>
 				<?php endif; ?>
 
 				<?php if ( ! empty( $menu_id ) && is_numeric( $menu_id ) ) : ?>
@@ -229,7 +229,7 @@ $tagline          = get_option( 'jp_footer_tagline', __( 'Built with passion for
 			<!-- Column 4: Downloads (Clean Document Icon + Label List) -->
 			<div class="jp-footer-col">
 				<?php if ( ! empty( $col4_title ) ) : ?>
-					<h4 class="jp-footer-col-title"><?php echo esc_html( $col4_title ); ?></h4>
+					<h3 class="jp-footer-col-title"><?php echo esc_html( $col4_title ); ?></h3>
 				<?php endif; ?>
 
 				<div class="jp-footer-download-vertical">

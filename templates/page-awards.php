@@ -57,7 +57,15 @@ $awards_query = new \WP_Query( $awards_args );
 							<div class="jp-award-card-header">
 								<div class="jp-award-icon-circle">
 									<?php if ( str_starts_with( $icon, 'http' ) ) : ?>
-										<img src="<?php echo esc_url( $icon ); ?>" alt="<?php echo esc_attr( get_the_title() ); ?>">
+										<?php
+										echo jp_get_image_tag( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped inside helper.
+											$icon,
+											array(
+												'alt'  => get_the_title(),
+												'size' => 'thumbnail',
+											)
+										);
+										?>
 									<?php else : ?>
 										<span class="dashicons <?php echo esc_attr( $icon ); ?>"></span>
 									<?php endif; ?>

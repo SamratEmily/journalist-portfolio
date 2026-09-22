@@ -145,6 +145,8 @@ class Shortcodes {
 
 		$slider_id = 'jp_awards_slider_' . wp_rand( 100, 999 );
 
+		wp_enqueue_style( 'jp-portfolio-awards-style' );
+
 		ob_start();
 		?>
 		<section class="jp-section jp-awards-section" style="padding-top: 40px; padding-bottom: 40px;">
@@ -188,7 +190,15 @@ class Shortcodes {
 									<div class="jp-award-card-header">
 										<div class="jp-award-icon-circle">
 											<?php if ( str_starts_with( $icon, 'http' ) ) : ?>
-												<img src="<?php echo esc_url( $icon ); ?>" alt="<?php echo esc_attr( $award->post_title ); ?>">
+												<?php
+												echo jp_get_image_tag( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped inside helper.
+													$icon,
+													array(
+														'alt'  => $award->post_title,
+														'size' => 'thumbnail',
+													)
+												);
+												?>
 											<?php else : ?>
 												<span class="dashicons <?php echo esc_attr( $icon ); ?>"></span>
 											<?php endif; ?>
@@ -249,13 +259,16 @@ class Shortcodes {
 			return '';
 		}
 
+		wp_enqueue_style( 'jp-portfolio-extra-style' );
+		wp_enqueue_script( 'jp-photo-modal' );
+
 		ob_start();
 		?>
 		<section class="jp-section jp-photos-section" style="padding-top: 0px; padding-bottom: 50px; background: #f8fafc;">
 			<div class="jp-container">
 				<div class="jp-photos-header-row">
 					<div class="jp-photos-title-wrap">
-						<span class="jp-section-kicker" style="font-size: 0.8rem; font-weight: 700; color: #059669; letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-bottom: 4px;"><?php esc_html_e( 'PHOTOJOURNALISM & VISUAL DISPATCHES', 'journalist-portfolio-hub' ); ?></span>
+						<span class="jp-section-kicker" style="font-size: 0.8rem; font-weight: 700; color: #047857; letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-bottom: 4px;"><?php esc_html_e( 'PHOTOJOURNALISM & VISUAL DISPATCHES', 'journalist-portfolio-hub' ); ?></span>
 						<h2 style="font-size: 1.75rem; font-weight: 800; color: #0f172a; margin: 0; letter-spacing: -0.02em;"><?php esc_html_e( 'PHOTOS', 'journalist-portfolio-hub' ); ?></h2>
 					</div>
 					<a href="<?php echo esc_url( home_url( '/photos' ) ); ?>" class="jp-read-more" style="font-size: 0.95rem; font-weight: 700;">
@@ -279,9 +292,18 @@ class Shortcodes {
 						?>
 						<article class="jp-photo-card" data-photo-url="<?php echo esc_url( $photo_url ); ?>" data-title="<?php echo esc_attr( $item->post_title ); ?>" data-desc="<?php echo esc_attr( $desc ); ?>" data-tags="<?php echo esc_attr( $tags ); ?>" data-published-url="<?php echo esc_url( $pub_url ); ?>">
 							<div class="jp-photo-thumb-wrap">
-								<img src="<?php echo esc_url( $photo_url ); ?>" alt="<?php echo esc_attr( $item->post_title ); ?>" class="jp-photo-thumb">
+								<?php
+								echo jp_get_image_tag( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped inside helper.
+									$photo_url,
+									array(
+										'alt'   => $item->post_title,
+										'class' => 'jp-photo-thumb',
+										'size'  => 'medium_large',
+									)
+								);
+								?>
 								<div class="jp-photo-overlay">
-									<span class="jp-photo-view-btn" aria-label="<?php esc_attr_e( 'View Photo', 'journalist-portfolio-hub' ); ?>">
+									<span class="jp-photo-view-btn" aria-hidden="true">
 										<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
 									</span>
 								</div>
@@ -338,13 +360,16 @@ class Shortcodes {
 			return '';
 		}
 
+		wp_enqueue_style( 'jp-portfolio-extra-style' );
+		wp_enqueue_script( 'jp-multimedia-modal' );
+
 		ob_start();
 		?>
 		<section class="jp-section jp-multimedia-section" style="padding-top: 0px; padding-bottom: 50px; background: #ffffff;">
 			<div class="jp-container">
 				<div class="jp-multimedia-header-row">
 					<div class="jp-multimedia-title-wrap">
-						<span class="jp-section-kicker" style="font-size: 0.8rem; font-weight: 700; color: #059669; letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-bottom: 4px;"><?php esc_html_e( 'DOCUMENTARY & AUDIO REPORTING', 'journalist-portfolio-hub' ); ?></span>
+						<span class="jp-section-kicker" style="font-size: 0.8rem; font-weight: 700; color: #047857; letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-bottom: 4px;"><?php esc_html_e( 'DOCUMENTARY & AUDIO REPORTING', 'journalist-portfolio-hub' ); ?></span>
 						<h2 style="font-size: 1.75rem; font-weight: 800; color: #0f172a; margin: 0; letter-spacing: -0.02em;"><?php esc_html_e( 'VIDEOS', 'journalist-portfolio-hub' ); ?></h2>
 					</div>
 					<a href="<?php echo esc_url( home_url( '/videos' ) ); ?>" class="jp-read-more" style="font-size: 0.95rem; font-weight: 700;">
@@ -372,9 +397,18 @@ class Shortcodes {
 						?>
 						<article class="jp-multimedia-card" data-video-url="<?php echo esc_url( $youtube_url ); ?>" data-title="<?php echo esc_attr( $item->post_title ); ?>">
 							<div class="jp-multimedia-thumb-wrap">
-								<img src="<?php echo esc_url( $thumbnail ); ?>" alt="<?php echo esc_attr( $item->post_title ); ?>" class="jp-multimedia-thumb">
+								<?php
+								echo jp_get_image_tag( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped inside helper.
+									$thumbnail,
+									array(
+										'alt'   => $item->post_title,
+										'class' => 'jp-multimedia-thumb',
+										'size'  => 'medium_large',
+									)
+								);
+								?>
 								<div class="jp-multimedia-overlay">
-									<span class="jp-multimedia-play-btn" aria-label="<?php esc_attr_e( 'Play Media', 'journalist-portfolio-hub' ); ?>">
+									<span class="jp-multimedia-play-btn" aria-hidden="true">
 										<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
 									</span>
 								</div>
@@ -418,6 +452,8 @@ class Shortcodes {
 
 		$excerpt_text = wp_trim_words( $bio_text, 48, '...' );
 
+		wp_enqueue_style( 'jp-portfolio-extra-style' );
+
 		ob_start();
 		?>
 		<section class="jp-section jp-about-brief-section" style="padding-top: 0px; padding-bottom: 70px; background: #F9F9FB;">
@@ -426,7 +462,16 @@ class Shortcodes {
 					<!-- Left Column: Profile Frame -->
 					<div class="jp-about-brief-card-frame">
 						<?php if ( ! empty( $profile_image ) ) : ?>
-							<img src="<?php echo esc_url( $profile_image ); ?>" alt="<?php echo esc_attr( $full_name ); ?>" class="jp-about-brief-img">
+							<?php
+							echo jp_get_image_tag( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped inside helper.
+								$profile_image,
+								array(
+									'alt'   => $full_name,
+									'class' => 'jp-about-brief-img',
+									'size'  => 'medium_large',
+								)
+							);
+							?>
 						<?php else : ?>
 							<div class="jp-about-brief-avatar-placeholder">
 								<span class="dashicons dashicons-admin-users" style="font-size: 72px; width: 72px; height: 72px; color: #94a3b8;"></span>
@@ -479,6 +524,8 @@ class Shortcodes {
 
 		$stats = array_slice( $stats, 0, 5 );
 
+		wp_enqueue_style( 'jp-portfolio-stats-style' );
+
 		ob_start();
 		?>
 		<section class="jp-section jp-impact-stats-section" style="padding-top: 15px; padding-bottom: 45px;">
@@ -498,7 +545,16 @@ class Shortcodes {
 							<div class="jp-impact-stat-item">
 								<div class="jp-impact-stat-icon-wrap">
 									<?php if ( str_starts_with( $icon, 'http' ) ) : ?>
-										<img src="<?php echo esc_url( $icon ); ?>" alt="<?php echo esc_attr( $number ); ?>" class="jp-impact-stat-custom-img">
+										<?php
+										echo jp_get_image_tag( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped inside helper.
+											$icon,
+											array(
+												'alt'   => $number,
+												'class' => 'jp-impact-stat-custom-img',
+												'size'  => 'thumbnail',
+											)
+										);
+										?>
 									<?php elseif ( str_starts_with( $icon, 'dashicons-' ) ) : ?>
 										<span class="dashicons <?php echo esc_attr( $icon ); ?>"></span>
 									<?php else : ?>

@@ -83,11 +83,17 @@ $ajax_act  = \JournalistPortfolio\Contact_Handler::AJAX_ACTION;
 				<!-- Author Intro -->
 				<div class="jp-contact-author-intro">
 					<?php if ( ! empty( $profile_img ) ) : ?>
-						<img
-							src="<?php echo esc_url( $profile_img ); ?>"
-							alt="<?php echo esc_attr( $full_name ); ?>"
-							class="jp-contact-avatar"
-						>
+						<?php
+						echo jp_get_image_tag( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped inside helper.
+							$profile_img,
+							array(
+								'alt'   => $full_name,
+								'class' => 'jp-contact-avatar',
+								'size'  => 'thumbnail',
+								'lazy'  => false,
+							)
+						);
+						?>
 					<?php else : ?>
 						<div class="jp-contact-avatar jp-contact-avatar-placeholder">
 							<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">

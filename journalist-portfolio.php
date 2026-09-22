@@ -5,7 +5,7 @@
  * Description:       A complete, standalone journalist portfolio plugin with CPT Stories, downloadable portfolio assets (CV & Media Kit), admin-controlled 4-column footer, customizable profile settings, shortcodes, and frontend templates.
  * Version:           1.3.0
  * Author:            MD. Samrat Hossen
- * Author URI:        https://samrat-personal-portfolio.netlify.app/
+ * Author URI:        https://samratemily.netlify.app/
  * Text Domain:       journalist-portfolio-hub
  * Domain Path:       /languages
  * Requires at least: 6.0
@@ -135,6 +135,109 @@ if ( ! function_exists( 'jp_get_media_kit_url' ) ) {
 	 */
 	function jp_get_media_kit_url(): string {
 		return esc_url( get_option( 'jp_footer_mediakit_file', get_option( 'jp_media_kit_file', '' ) ) );
+	}
+}
+
+if ( ! function_exists( 'jp_get_attachment_id_from_url' ) ) {
+	/**
+	 * Resolve a media library URL to its attachment ID.
+	 *
+	 * Retries without any -WIDTHxHEIGHT suffix so URLs saved against a generated
+	 * size still resolve back to the original attachment.
+	 *
+	 * @param string $url Image URL.
+	 * @return int Attachment ID, or 0 when the URL is not in the media library.
+	 */
+	function jp_get_attachment_id_from_url( string $url ): int {
+		static $cache = array();
+
+		if ( empty( $url ) ) {
+			return 0;
+		}
+
+		if ( isset( $cache[ $url ] ) ) {
+			return $cache[ $url ];
+		}
+
+		$attachment_id = attachment_url_to_postid( $url );
+
+		if ( ! $attachment_id ) {
+			$original = preg_replace( '/-\d+x\d+(?=\.[a-zA-Z0-9]+$)/', '', $url );
+			if ( $original !== $url ) {
+				$attachment_id = attachment_url_to_postid( $original );
+			}
+		}
+
+		$cache[ $url ] = (int) $attachment_id;
+
+		return $cache[ $url ];
+	}
+}
+
+if ( ! function_exists( 'jp_get_image_tag' ) ) {
+	/**
+	 * Build a sized, lazy-loaded <img> tag from a stored image URL.
+	 *
+	 * Options and post meta store plain URLs that usually point at the full size
+	 * original, so rendering them directly ships a multi-megapixel file into a
+	 * thumbnail slot. Media library URLs are routed through
+	 * wp_get_attachment_image() to pick up srcset, sizes and intrinsic
+	 * dimensions; external URLs fall back to a plain tag.
+	 *
+	 * @param string $url  Image URL.
+	 * @param array  $args alt, class, size, sizes, style, lazy, priority.
+	 * @return string Image HTML, or an empty string when no URL is set.
+	 */
+	function jp_get_image_tag( string $url, array $args = array() ): string {
+		if ( empty( $url ) ) {
+			return '';
+		}
+
+		$args = wp_parse_args(
+			$args,
+			array(
+				'alt'      => '',
+				'class'    => '',
+				'size'     => 'large',
+				'sizes'    => '',
+				'style'    => '',
+				'lazy'     => true,
+				'priority' => false,
+			)
+		);
+
+		// A high priority hint only makes sense for an image that also loads eagerly.
+		$lazy = $args['lazy'] && ! $args['priority'];
+
+		$attr = array(
+			'alt'      => $args['alt'],
+			'decoding' => 'async',
+			'loading'  => $lazy ? 'lazy' : 'eager',
+		);
+
+		// Flag the LCP candidate so the browser does not queue it behind other images.
+		if ( $args['priority'] ) {
+			$attr['fetchpriority'] = 'high';
+		}
+
+		foreach ( array( 'class', 'sizes', 'style' ) as $optional ) {
+			if ( ! empty( $args[ $optional ] ) ) {
+				$attr[ $optional ] = $args[ $optional ];
+			}
+		}
+
+		$attachment_id = jp_get_attachment_id_from_url( $url );
+
+		if ( $attachment_id ) {
+			return wp_get_attachment_image( $attachment_id, $args['size'], false, $attr );
+		}
+
+		$html = '<img src="' . esc_url( $url ) . '"';
+		foreach ( $attr as $name => $value ) {
+			$html .= ' ' . $name . '="' . esc_attr( $value ) . '"';
+		}
+
+		return $html . ' />';
 	}
 }
 

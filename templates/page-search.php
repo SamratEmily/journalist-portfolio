@@ -136,7 +136,7 @@ $found_count = (int) $wp_query->found_posts;
 					$cat_link    = ( ! empty( $story_cats ) && ! is_wp_error( $story_cats ) ) ? get_term_link( $story_cats[0] ) : '#';
 					?>
 					<article class="jp-story-card">
-						<a href="<?php the_permalink(); ?>" class="jp-story-thumb-link">
+						<a href="<?php the_permalink(); ?>" class="jp-story-thumb-link" aria-label="<?php echo esc_attr( get_the_title() ); ?>">
 							<?php if ( has_post_thumbnail() ) : ?>
 								<?php the_post_thumbnail( 'medium_large', array( 'class' => 'jp-story-thumb' ) ); ?>
 							<?php else : ?>
