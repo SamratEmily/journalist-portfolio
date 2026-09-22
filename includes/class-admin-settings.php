@@ -1439,7 +1439,7 @@ class Admin_Settings {
 					<h1><?php esc_html_e( 'Impact Stats Counter Settings', 'journalist-portfolio-hub' ); ?></h1>
 					<p><?php esc_html_e( 'Manage the 5 key reporting metric boxes displayed in the elevated impact counter bar on the homepage.', 'journalist-portfolio-hub' ); ?></p>
 				</div>
-				<form method="post" onsubmit="return confirm('<?php esc_js( esc_html_e( 'Reset all 5 stat boxes to default values?', 'journalist-portfolio-hub' ) ); ?>');">
+				<form method="post" onsubmit="return confirm('<?php echo esc_js( __( 'Reset all 5 stat boxes to default values?', 'journalist-portfolio-hub' ) ); ?>');">
 					<?php wp_nonce_field( 'jp_save_impact_stats', 'jp_impact_stats_nonce' ); ?>
 					<input type="hidden" name="action" value="reset_defaults">
 					<button type="submit" class="button button-secondary"><?php esc_html_e( 'Reset Defaults', 'journalist-portfolio-hub' ); ?></button>

@@ -514,7 +514,7 @@ class CPT_Stories {
 					</div>
 				</div>
 
-				<form method="post" onsubmit="return confirm('<?php esc_js( esc_html_e( 'Are you sure you want to re-seed demo portfolio content?', 'journalist-portfolio-hub' ) ); ?>');">
+				<form method="post" onsubmit="return confirm('<?php echo esc_js( __( 'Are you sure you want to re-seed demo portfolio content?', 'journalist-portfolio-hub' ) ); ?>');">
 					<?php wp_nonce_field( 'jp_reseed_demo_action', 'jp_reseed_nonce' ); ?>
 					<input type="hidden" name="action" value="seed_demo">
 					<div style="display: flex; align-items: center; justify-content: space-between; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 20px 24px; border-radius: 10px;">
